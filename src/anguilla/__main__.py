@@ -2,7 +2,7 @@ import sys
 
 from iipyper import run
 
-from iml.app import *
+from anguilla.app import *
 
 def help():
     print("""

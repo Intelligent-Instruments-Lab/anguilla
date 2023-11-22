@@ -4,7 +4,7 @@ Authors:
   Intelligent Instruments Lab 2023
 """
 
-from iml import IML
+from anguilla import IML
 from iipyper import OSC, run
 import numpy as np
 from time import time
