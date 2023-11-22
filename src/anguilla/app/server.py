@@ -4,8 +4,8 @@ Authors:
   Intelligent Instruments Lab 2023
 """
 
+import anguilla
 from anguilla import IML
-from anguilla.serialize import JSONDecoder, JSONEncoder
 from iipyper import OSC, run
 import numpy as np
 from time import time
@@ -192,10 +192,10 @@ def main(
             "ERROR: anguilla: path should end with .json"
         if k=='':
             print(f'loading all IML objects from {path}')
-            with open(path, 'r') as f:
-                d = json.load(f, cls=JSONDecoder)
-                assert isinstance(d, dict)
-                instances.update(d)
+            d = anguilla.serialize.load(path)
+            assert isinstance(d, dict)
+            print(f'found IML instances: {list(d.keys())}')
+            instances.update(d)
         else:
             print(f'load IML object at "{k}" from {path}')
             instances[k] = IML.load(path)
@@ -213,8 +213,7 @@ def main(
         
         if k=='':
             print(f'saving all IML objects to {path}')
-            with open(path, 'w') as f:
-                json.dump(instances, f, cls=JSONEncoder)
+            anguilla.serialize.save(path, instances)
         else:
             print(f'saving IML object at "{k}" to {path}')
             instances[k].save(path)
