@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>Nnsearch - anguilla</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">anguilla</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href="../../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Reference <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Anguilla</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../__init__/" class="dropdown-item">  init  </a>
+</li>
+            
+<li>
+    <a href="../embed/" class="dropdown-item">Embed</a>
+</li>
+            
+<li>
+    <a href="../interpolate/" class="dropdown-item">Interpolate</a>
+</li>
+            
+<li>
+    <a href="./" class="dropdown-item active">Nnsearch</a>
+</li>
+            
+<li>
+    <a href="../serialize/" class="dropdown-item">Serialize</a>
+</li>
+            
+<li>
+    <a href="../types/" class="dropdown-item">Types</a>
+</li>
+            
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">App</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../app/__init__/" class="dropdown-item">  init  </a>
+</li>
+            
+<li>
+    <a href="../app/server/" class="dropdown-item">Server</a>
+</li>
+    </ul>
+  </li>
+    </ul>
+  </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../interpolate/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../serialize/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="2"><a href="#anguilla.nnsearch" class="nav-link">nnsearch</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#anguilla.nnsearch.Index" class="nav-link">Index</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#anguilla.nnsearch.IndexBrute" class="nav-link">IndexBrute</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#anguilla.nnsearch.IndexFast" class="nav-link">IndexFast</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-level="2"><a href="#anguilla.nnsearch.NNSearch" class="nav-link">NNSearch</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="anguilla.nnsearch"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="anguilla.nnsearch.Index" class="doc doc-heading">
+          <code>Index</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="anguilla.serialize.JSONSerializable" href="../serialize/#anguilla.serialize.JSONSerializable">JSONSerializable</a></code></p>
+
+  
+      <p>base Index class.
+currently no function besides typing, warning of unimplemented features</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Index</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;base Index class.</span>
+<span class="sd">    currently no function besides typing, warning of unimplemented features</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">PairID</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Scores</span><span class="p">,</span> <span class="n">PairIDs</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="anguilla.nnsearch.IndexBrute" class="doc doc-heading">
+          <code>IndexBrute</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="anguilla.nnsearch.Index" href="#anguilla.nnsearch.Index">Index</a></code></p>
+
+  
+      <p>Optimized for simplicity and flexibility,
+may not scale to large datasets</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">IndexBrute</span><span class="p">(</span><span class="n">Index</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Optimized for simplicity and flexibility,</span>
+<span class="sd">    may not scale to large datasets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span><span class="n">Callable</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            d: optional, dimension of feature</span>
+<span class="sd">            metric: distance metric, default to squared euclidean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">sqL2</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">PairID</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PairID</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;add a new feature, return its ID.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            feature: the feature to add</span>
+<span class="sd">            id: if not supplied, generate a new ID;</span>
+<span class="sd">                otherwise, use the supplied id.</span>
+<span class="sd">                supply an existing id to replace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">default</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature</span>
+        <span class="k">return</span> <span class="nb">id</span>
+
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;remove a feature by ID&quot;&quot;&quot;</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feature</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get a feature by ID&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PairIDs</span><span class="p">,</span> <span class="n">Scores</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get feature(s) and IDs by proximity&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">dist_id</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">scores</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">dist_id</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="n">PairID</span><span class="p">,</span> <span class="n">Feature</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexBrute.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>d</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>optional, dimension of feature</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>metric</code></td>
+          <td>
+                <code><span title="anguilla.types.Callable">Callable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>distance metric, default to squared euclidean</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span><span class="n">Callable</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        d: optional, dimension of feature</span>
+<span class="sd">        metric: distance metric, default to squared euclidean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="n">sqL2</span><span class="p">()</span>
+
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexBrute.add" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>add a new feature, return its ID.
+Args:
+    feature: the feature to add
+    id: if not supplied, generate a new ID;
+        otherwise, use the supplied id.
+        supply an existing id to replace.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">PairID</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PairID</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;add a new feature, return its ID.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        feature: the feature to add</span>
+<span class="sd">        id: if not supplied, generate a new ID;</span>
+<span class="sd">            otherwise, use the supplied id.</span>
+<span class="sd">            supply an existing id to replace.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">default</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature</span>
+    <span class="k">return</span> <span class="nb">id</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexBrute.get" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>get a feature by ID</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feature</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get a feature by ID&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexBrute.remove" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">remove</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>remove a feature by ID</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;remove a feature by ID&quot;&quot;&quot;</span>
+    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexBrute.search" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">search</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>get feature(s) and IDs by proximity</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PairIDs</span><span class="p">,</span> <span class="n">Scores</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get feature(s) and IDs by proximity&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">dist_id</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="n">scores</span><span class="p">,</span> <span class="n">ids</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">dist_id</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="anguilla.nnsearch.IndexFast" class="doc doc-heading">
+          <code>IndexFast</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="anguilla.nnsearch.Index" href="#anguilla.nnsearch.Index">Index</a></code></p>
+
+  
+      <p>Optimized for fast <code>search</code> on large vectors / datasets.
+Only L2 distance supported. 
+<code>remove</code> may be slow.</p>
+<p>This is currently a wrapper around faiss.FlatIndexL2 which provides stable ids when using <code>remove</code>
+In the future could support dot product and/or approximate search indices.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">IndexFast</span><span class="p">(</span><span class="n">Index</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Optimized for fast `search` on large vectors / datasets.</span>
+<span class="sd">    Only L2 distance supported. </span>
+<span class="sd">    `remove` may be slow.</span>
+
+<span class="sd">    This is currently a wrapper around faiss.FlatIndexL2 which provides stable ids when using `remove`</span>
+<span class="sd">    In the future could support dot product and/or approximate search indices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span><span class="n">Callable</span><span class="o">=</span><span class="n">sqL2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            d: dimension of feature</span>
+<span class="sd">            metric: </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">metric</span><span class="o">==</span><span class="n">sqL2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">IndexFlatL2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;IndexFast supports only sqL2 metric&quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">d</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">PairID</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;add a new feature, return its ID.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            feature: the feature to add</span>
+<span class="sd">            id: if not supplied, generate a new ID;</span>
+<span class="sd">                otherwise, use the supplied id.</span>
+<span class="sd">                supply an existing id to replace.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># no id supplied case</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">,</span> <span class="n">default</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">:</span>
+            <span class="c1"># existing id supplied case</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">ntotal</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># map ID to faiss index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">return</span> <span class="nb">id</span>
+
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;remove a feature by ID&quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">remove_ids</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">idx</span><span class="p">)[</span><span class="kc">None</span><span class="p">])</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="c1"># faiss shifts its internal index to stay dense</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:(</span><span class="n">v</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">idx</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">idx</span> <span class="k">else</span> <span class="n">k</span><span class="p">):</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get a feature by ID&quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">reconstruct</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PairIDs</span><span class="p">,</span> <span class="n">Scores</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get feature(s) and IDs by proximity&quot;&quot;&quot;</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> 
+        <span class="n">scores</span><span class="p">,</span> <span class="n">idxs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="c1"># remove batch dim</span>
+        <span class="n">scores</span><span class="p">,</span> <span class="n">idxs</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># remove -1 ids</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">]</span> 
+        <span class="n">scores</span><span class="p">,</span> <span class="n">idxs</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">b</span><span class="p">],</span> <span class="n">idxs</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+        <span class="c1"># map back to ids</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span>  
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">PairID</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="n">PairID</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexFast.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">sqL2</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>d</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>dimension of feature</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>metric</code></td>
+          <td>
+                <code><span title="anguilla.types.Callable">Callable</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              
+            </div>
+          </td>
+          <td>
+                <code><span title="anguilla.nnsearch.sqL2">sqL2</span></code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="n">metric</span><span class="p">:</span><span class="n">Callable</span><span class="o">=</span><span class="n">sqL2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        d: dimension of feature</span>
+<span class="sd">        metric: </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">metric</span><span class="o">==</span><span class="n">sqL2</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">IndexFlatL2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;IndexFast supports only sqL2 metric&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexFast.add" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>add a new feature, return its ID.
+Args:
+    feature: the feature to add
+    id: if not supplied, generate a new ID;
+        otherwise, use the supplied id.
+        supply an existing id to replace.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">PairID</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;add a new feature, return its ID.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        feature: the feature to add</span>
+<span class="sd">        id: if not supplied, generate a new ID;</span>
+<span class="sd">            otherwise, use the supplied id.</span>
+<span class="sd">            supply an existing id to replace.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># no id supplied case</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">,</span> <span class="n">default</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">:</span>
+        <span class="c1"># existing id supplied case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">ntotal</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="c1"># map ID to faiss index</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="k">return</span> <span class="nb">id</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexFast.get" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>get a feature by ID</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get a feature by ID&quot;&quot;&quot;</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">reconstruct</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexFast.remove" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">remove</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>remove a feature by ID</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;remove a feature by ID&quot;&quot;&quot;</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">remove_ids</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">idx</span><span class="p">)[</span><span class="kc">None</span><span class="p">])</span>
+    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="c1"># faiss shifts its internal index to stay dense</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:(</span><span class="n">v</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">idx</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_to_idx</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">idx</span> <span class="k">else</span> <span class="n">k</span><span class="p">):</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.IndexFast.search" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">search</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>get feature(s) and IDs by proximity</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PairIDs</span><span class="p">,</span> <span class="n">Scores</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;get feature(s) and IDs by proximity&quot;&quot;&quot;</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> 
+    <span class="n">scores</span><span class="p">,</span> <span class="n">idxs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="c1"># remove batch dim</span>
+    <span class="n">scores</span><span class="p">,</span> <span class="n">idxs</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># remove -1 ids</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">]</span> 
+    <span class="n">scores</span><span class="p">,</span> <span class="n">idxs</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">b</span><span class="p">],</span> <span class="n">idxs</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+    <span class="c1"># map back to ids</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx_to_id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">ids</span><span class="p">,</span> <span class="n">scores</span>  
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+
+<h2 id="anguilla.nnsearch.NNSearch" class="doc doc-heading">
+          <code>NNSearch</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><a class="autorefs autorefs-internal" title="anguilla.serialize.JSONSerializable" href="../serialize/#anguilla.serialize.JSONSerializable">JSONSerializable</a></code></p>
+
+  
+      <p>This class is the mid-level interface for neighbor search,
+providing some common utilities over the Index subclasses.
+Users will generally use <code>IML.search</code> instead of calling NNSearch directly.</p>
+
+<details class="todo" open>
+  <summary>possibly get rid of this class and fold it into IML?</summary>
+  <ul>
+<li>currently adds only complexity to the IML implementation</li>
+<li>but could be useful if needing NNSearch without Feature/Interpolate?</li>
+</ul>
+</details>
+            <details class="quote">
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NNSearch</span><span class="p">(</span><span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is the mid-level interface for neighbor search,</span>
+<span class="sd">    providing some common utilities over the Index subclasses.</span>
+<span class="sd">    Users will generally use `IML.search` instead of calling NNSearch directly.</span>
+
+<span class="sd">    TODO: possibly get rid of this class and fold it into IML?</span>
+<span class="sd">        * currently adds only complexity to the IML implementation</span>
+<span class="sd">        * but could be useful if needing NNSearch without Feature/Interpolate?</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span><span class="n">Index</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            index: instance of Index</span>
+<span class="sd">            k: default k-nearest neighbors (but can be overridden later)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_k</span> <span class="o">=</span> <span class="n">k</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PairIDs</span><span class="p">,</span> <span class="n">Scores</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        find the k-nearest neighbors of `feature`</span>
+<span class="sd">        Args:</span>
+<span class="sd">            feature: query feature vector</span>
+<span class="sd">            k: maximum number of neighbors to return</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ids: ids of neighbors</span>
+<span class="sd">            scores: similarity scores of neighbors (higher is more similar)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_k</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="n">Feature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;compute distance between two features&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span> <span class="n">Feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">PairID</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PairID</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;add a feature vector to the index and return its ID&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feature</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;look up a feature by ID&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NNSearch: WARNING: can&#39;t `get` ID </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2"> which doesn&#39;t exist or has been removed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PairID</span><span class="p">,</span> <span class="n">PairIDs</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove point(s) from the index by ID</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># iterable of ids case:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="c1"># single id case:</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NNSearch: WARNING: can&#39;t `remove` ID </span><span class="si">{</span><span class="n">ids</span><span class="si">}</span><span class="s2"> which doesn&#39;t exist or has already been removed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">remove_near</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PairIDs</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove point(s) from the index by proximity.</span>
+<span class="sd">        Use k=1 to remove a single point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_k</span>
+        <span class="n">ids</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ids</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;clear all data from the index&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;iterate over IDs in the index&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">IDFeaturePair</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;iterate over ID, Feature pairs&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">iterator</span><span class="p">():</span>
+            <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">ids</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">IDFeaturePair</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">iterator</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.__call__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>find the k-nearest neighbors of <code>feature</code>
+Args:
+    feature: query feature vector
+    k: maximum number of neighbors to return
+Returns:
+    ids: ids of neighbors
+    scores: similarity scores of neighbors (higher is more similar)</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PairIDs</span><span class="p">,</span> <span class="n">Scores</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    find the k-nearest neighbors of `feature`</span>
+<span class="sd">    Args:</span>
+<span class="sd">        feature: query feature vector</span>
+<span class="sd">        k: maximum number of neighbors to return</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ids: ids of neighbors</span>
+<span class="sd">        scores: similarity scores of neighbors (higher is more similar)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_k</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.__init__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>index</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="anguilla.nnsearch.Index" href="#anguilla.nnsearch.Index">Index</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>instance of Index</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>k</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>default k-nearest neighbors (but can be overridden later)</p>
+            </div>
+          </td>
+          <td>
+                <code>10</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span><span class="n">Index</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        index: instance of Index</span>
+<span class="sd">        k: default k-nearest neighbors (but can be overridden later)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">default_k</span> <span class="o">=</span> <span class="n">k</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.__iter__" class="doc doc-heading">
+          <code class="highlight language-python"><span class="fm">__iter__</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>iterate over IDs in the index</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;iterate over IDs in the index&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.add" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>add a feature vector to the index and return its ID</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span> <span class="n">Feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">PairID</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PairID</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;add a feature vector to the index and return its ID&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.distance" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">distance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>compute distance between two features</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="n">Feature</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;compute distance between two features&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.get" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>look up a feature by ID</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span><span class="n">PairID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feature</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;look up a feature by ID&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NNSearch: WARNING: can&#39;t `get` ID </span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2"> which doesn&#39;t exist or has been removed&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.items" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">items</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>iterate over ID, Feature pairs</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">IDFeaturePair</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;iterate over ID, Feature pairs&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">iterator</span><span class="p">():</span>
+        <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">ids</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">IDFeaturePair</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">iterator</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.remove" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">remove</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Remove point(s) from the index by ID</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">PairID</span><span class="p">,</span> <span class="n">PairIDs</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove point(s) from the index by ID</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># iterable of ids case:</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="c1"># single id case:</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NNSearch: WARNING: can&#39;t `remove` ID </span><span class="si">{</span><span class="n">ids</span><span class="si">}</span><span class="s2"> which doesn&#39;t exist or has already been removed&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.remove_near" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">remove_near</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Remove point(s) from the index by proximity.
+Use k=1 to remove a single point.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_near</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PairIDs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove point(s) from the index by proximity.</span>
+<span class="sd">    Use k=1 to remove a single point.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_k</span>
+    <span class="n">ids</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ids</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+<h3 id="anguilla.nnsearch.NNSearch.reset" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">reset</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>clear all data from the index</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;clear all data from the index&quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../js/jquery-3.6.0.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js"></script>
+        <script src="../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
