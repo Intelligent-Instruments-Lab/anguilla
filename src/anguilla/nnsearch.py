@@ -12,7 +12,7 @@ class sqL2(Metric):
 
 class Index(JSONSerializable):
     """base Index class.
-    currently no function besides typing, warning of unimplemented features
+    currently no function besides typing, warning of unimplemented features.
     """
     def add(self, feature:Feature, id:Optional[PairID]=None):
         raise NotImplementedError
@@ -93,7 +93,7 @@ try:
         Only L2 distance supported. 
         `remove` may be slow.
 
-        This is currently a wrapper around faiss.FlatIndexL2 which provides stable ids when using `remove`
+        This is currently a wrapper around faiss.FlatIndexL2 which provides stable ids when using `remove`.
         In the future could support dot product and/or approximate search indices.
         """
         def __init__(self, d:int, metric:Callable=sqL2):
