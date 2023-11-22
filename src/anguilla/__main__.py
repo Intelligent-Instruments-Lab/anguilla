@@ -7,7 +7,7 @@ from anguilla.app import *
 def help():
     print("""
     available subcommands:
-        server: run the IML OSC server
+        server: run the anguilla OSC server
     """)
 
 if __name__=='__main__':

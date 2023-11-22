@@ -5,15 +5,17 @@ Authors:
 """
 
 from anguilla import IML
+from anguilla.serialize import JSONDecoder, JSONEncoder
 from iipyper import OSC, run
 import numpy as np
 from time import time
 from collections import defaultdict
 from typing import Optional
+import json
 
-def vector_args(a):
+def vector_args(a, scalars=None):
     a = list(a)
-    args = defaultdict(list)
+    kw = defaultdict(list)
     k = None
     while len(a):
         item = a.pop(0)
@@ -22,9 +24,13 @@ def vector_args(a):
             k = item
         else:
             if k is None:
-                print('ERROR: iml: bad OSC syntax')
-            args[k].append(item)
-    return args
+                print(f'ERROR: anguilla: bad OSC syntax in {a}')
+            kw[k].append(item)
+    # unwrap scalars
+    for item in scalars or []:
+        if item in kw:
+            kw[item] = kw[item][0]
+    return kw
 
 def main(
     osc_port:int=8732,
@@ -39,152 +45,179 @@ def main(
 
     OSC Routes:
 
-        /iml/config/emb "Identity"
+        /anguilla/config/emb "Identity"
             set embedding to Identity (the default)
-        /iml/config/emb "ProjectAndSort"
+        /anguilla/config/emb "ProjectAndSort"
             set embedding to ProjectAndSort
 
-        /iml/config/interp "Smooth"
+        /anguilla/config/interp "Smooth"
             set interpolator to Smooth (the default)
-        /iml/config/interp "Softmax"
+        /anguilla/config/interp "Softmax"
             set interpolator to Softmax
-        /iml/config/interp "Ripple"
+        /anguilla/config/interp "Ripple"
             set interpolator to Ripple
 
         -- or --
-        /iml/config "emb" ... "interp" ...
+        /anguilla/config "emb" ... "interp" ...
 
-        /iml/add "input" ... "output"... 
+        /anguilla/add "input" ... "output"... 
             add a point to the mapping
 
-        /iml/remove id 
+        /anguilla/remove id 
             remove a point from the mapping by ID
 
-        /iml/remove_near "input" ... ["k" k]
+        /anguilla/remove_near "input" ... ["k" k]
             remove k points from the mapping by proximity
 
-        /iml/map "input" ... ["k" k] ["ripple" r] ["temp" t]
+        /anguilla/map "input" ... ["k" k] ["ripple" r] ["temp" t]
             map an input to an output using k neighbors
             "temp" 1 > t > 0 when using Softmax interpolator
             "ripple" r > 0 when using Ripple interpolator
 
-        /iml/reset
+        /anguilla/reset
             remove all points
-        /iml/reset "keep_near" ... ["k" k]
+        /anguilla/reset "keep_near" ... ["k" k]
             remove all points except the k neighbors of "keep_near"
 
-        /iml/load path
+        /anguilla/load path
             load IML from file at `path`
-        /iml/save path
+        /anguilla/save path
             save IML to file at `path`
     """
     osc = OSC(osc_host, osc_port)
 
-    iml = None
+    instances = {}
+    configs = defaultdict(dict)
 
-    config = {}
-
-    @osc.kwargs('/iml/config')
+    @osc.kwargs('/anguilla/config/*')
     def _(address, **kw):
+        k = address.split('config')[-1]
         # TODO: validate input
-        config.update(kw)
-        print(config) 
+        configs[k].update(kw)
+        print(configs[k]) 
 
-    @osc.args('/iml/config/interp')
-    def _(address, name):
-        if iml is None:
-            config['interp'] = name
-        else:
-            iml.set_interp(name)
+    # @osc.args('/anguilla/config/interp')
+    # def _(address, name):
+    #     if iml is None:
+    #         config['interp'] = name
+    #     else:
+    #         iml.set_interp(name)
 
-    @osc.args('/iml/config/emb')
-    def _(address, name):
-        if iml is None:
-            config['emb'] = name
-        else:
-            iml.set_emb(name)
+    # @osc.args('/anguilla/config/emb')
+    # def _(address, name):
+    #     if iml is None:
+    #         config['emb'] = name
+    #     else:
+    #         iml.set_emb(name)
 
-    @osc.args('/iml/add')
+    @osc.args('/anguilla/add*')
     def _(address, *a):
-        nonlocal iml
+        k = ''.join(address.split('/')[3:]).strip('/')
+
         kw = vector_args(a)
 
         if 'input' not in kw:
-            print('ERROR: iml: no input vector supplied')
+            print('ERROR: anguilla: no input vector supplied')
             return
         if 'output' not in kw:
-            print('ERROR: iml: no output vector supplied')
+            print('ERROR: anguilla: no output vector supplied')
             return
 
         # d = len(kw['input'])
         # config['feature_size'] = d
-        if iml is None:
+        if k not in instances:
             # print(f'new IML object with Input dimension {d}')
-            print(f'new IML object with {config}')
-            iml = IML(**config)
+            print(f'new IML object with handle "{k}" with config {configs[k]}')
+            instances[k] = IML(**configs[k])
 
-        return '/iml/return/add', iml.add(**kw)
+        return '/return'+address, instances[k].add(**kw)
     
-    @osc.args('/iml/remove')
+    @osc.args('/anguilla/remove*')
     def _(address, id):
-        iml.remove(id)
+        k = ''.join(address.split('/')[3:]).strip('/')
+        if k in instances:
+            instances[k].remove(id)
+        else:
+            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
 
-    @osc.args('/iml/remove_near')
+    @osc.args('/anguilla/remove_near*')
     def _(address, *a):
-        kw = vector_args(a)
-        for k in ['k']:
-            if k in kw:
-                kw[k] = kw[k][0]
+        k = ''.join(address.split('/')[3:]).strip('/')
+        if k not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
+            return
+
+        kw = vector_args(a, scalars=['k'])
 
         if 'input' not in kw:
-            print('ERROR: iml: no input vector supplied')
+            print(f'ERROR: anguilla: {address}: no input vector supplied')
             return
         
-        iml.remove_near(**kw)
+        instances[k].remove_near(**kw)
 
-    @osc.args('/iml/map', return_port=osc_return_port)
+    @osc.args('/anguilla/map*', return_port=osc_return_port)
     def _(address, *a):
-        kw = vector_args(a)
-        for k in ['k', 'temp', 'ripple']:
-            if k in kw:
-                kw[k] = kw[k][0]
-
-        if 'input' not in kw:
-            print('ERROR: iml: no input vector supplied')
+        k = ''.join(address.split('/')[3:]).strip('/')
+        if k not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
+            print('ERROR: anguilla: call /anguilla/add at least once before /map')
             return
-        
-        if iml is None:
-            print('ERROR: iml: call /iml/add at least once before /map')
-            return
-        
-        result = iml.map(**kw).tolist()
-
-        return '/iml/return/map', *result
     
-    @osc.args('/iml/reset')
+        kw = vector_args(a, scalars=['k', 'temp', 'ripple'])
+
+        if 'input' not in kw:
+            print('ERROR: anguilla: no input vector supplied')
+            return
+        
+        result = instances[k].map(**kw).tolist()
+
+        return '/return'+address, *result
+    
+    @osc.args('/anguilla/reset*')
     def _(address, *a):
-        if iml is not None:
-            kw = vector_args(a)
-            for k in ['k']:
-                if k in kw:
-                    kw[k] = kw[k][0]
+        k = ''.join(address.split('/')[3:]).strip('/')
+        if k not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
+            return
+    
+        kw = vector_args(a, scalars=['k'])
 
-            iml.reset(**kw)
+        instances[k].reset(**kw)
 
-    @osc.args('/iml/load')
+    @osc.args('/anguilla/load*')
     def _(address, path):
-        nonlocal iml
+        k = ''.join(address.split('/')[3:]).strip('/')
         assert isinstance(path, str)
-        assert path.endswith('.json'), "ERROR: iml: path should end with .json"
-        print(f'new IML object from {path}')
-        iml = IML.load(path)
+        assert path.endswith('.json'), \
+            "ERROR: anguilla: path should end with .json"
+        if k=='':
+            print(f'loading all IML objects from {path}')
+            with open(path, 'r') as f:
+                d = json.load(f, cls=JSONDecoder)
+                assert isinstance(d, dict)
+                instances.update(d)
+        else:
+            print(f'load IML object at "{k}" from {path}')
+            instances[k] = IML.load(path)
 
-    @osc.args('/iml/save')
+    @osc.args('/anguilla/save*')
     def _(address, path):
+        k = ''.join(address.split('/')[3:]).strip('/')
+        if k!='' and k not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
+            return
+        
         assert isinstance(path, str)
-        assert path.endswith('.json'), "ERROR: iml: path should end with .json"
-        print(f'saving IML object to {path}')
-        iml.save(path)
+        assert path.endswith('.json'), \
+            "ERROR: anguilla: path should end with .json"
+        
+        if k=='':
+            print(f'saving all IML objects to {path}')
+            with open(path, 'w') as f:
+                json.dump(instances, f, cls=JSONEncoder)
+        else:
+            print(f'saving IML object at "{k}" to {path}')
+            instances[k].save(path)
 
 if __name__=='__main__':
     run(main)
