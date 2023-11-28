@@ -7,6 +7,7 @@ Authors:
 import anguilla
 from anguilla import IML
 from iipyper import OSC, run
+from iipyper.types import *
 import numpy as np
 from time import time
 from collections import defaultdict
@@ -32,6 +33,9 @@ def vector_args(a, scalars=None):
             kw[item] = kw[item][0]
     return kw
 
+def get_handle(address):
+    return ''.join(address.split('/')[3:]).strip('/')
+
 def main(
     osc_port:int=8732,
     osc_return_port:Optional[int]=None,
@@ -45,20 +49,17 @@ def main(
 
     OSC Routes:
 
-        /anguilla/config/emb "Identity"
+        /anguilla/config "emb" "Identity"
             set embedding to Identity (the default)
-        /anguilla/config/emb "ProjectAndSort"
+        /anguilla/config "emb" "ProjectAndSort"
             set embedding to ProjectAndSort
 
-        /anguilla/config/interp "Smooth"
+        /anguilla/config "interp" "Smooth"
             set interpolator to Smooth (the default)
-        /anguilla/config/interp "Softmax"
+        /anguilla/config "interp" "Softmax"
             set interpolator to Softmax
-        /anguilla/config/interp "Ripple"
+        /anguilla/config "interp" "Ripple"
             set interpolator to Ripple
-
-        -- or --
-        /anguilla/config "emb" ... "interp" ...
 
         /anguilla/add "input" ... "output"... 
             add a point to the mapping
@@ -89,107 +90,74 @@ def main(
     instances = {}
     configs = defaultdict(dict)
 
-    @osc.kwargs('/anguilla/config/*')
+    @osc.handle('/anguilla/config*')
     def _(address, **kw):
-        k = address.split('config')[-1]
+        k = get_handle(address)
+
+        print(k)
         # TODO: validate input
         configs[k].update(kw)
         print(configs[k]) 
 
-    # @osc.args('/anguilla/config/interp')
-    # def _(address, name):
-    #     if iml is None:
-    #         config['interp'] = name
-    #     else:
-    #         iml.set_interp(name)
+    @osc.handle('/anguilla/add*')
+    def _(address, input:Splat[None], output:Splat[None], id:int=None):
+        key = get_handle(address)
 
-    # @osc.args('/anguilla/config/emb')
-    # def _(address, name):
-    #     if iml is None:
-    #         config['emb'] = name
-    #     else:
-    #         iml.set_emb(name)
-
-    @osc.args('/anguilla/add*')
-    def _(address, *a):
-        k = ''.join(address.split('/')[3:]).strip('/')
-
-        kw = vector_args(a)
-
-        if 'input' not in kw:
-            print('ERROR: anguilla: no input vector supplied')
-            return
-        if 'output' not in kw:
-            print('ERROR: anguilla: no output vector supplied')
-            return
-
-        # d = len(kw['input'])
+        # d = len(input)
         # config['feature_size'] = d
-        if k not in instances:
+        if key not in instances:
             # print(f'new IML object with Input dimension {d}')
-            print(f'new IML object with handle "{k}" with config {configs[k]}')
-            instances[k] = IML(**configs[k])
+            print(f'new IML object with handle "{key}" with config {configs[key]}')
+            instances[key] = IML(**configs[key])
 
-        return '/return'+address, instances[k].add(**kw)
+        return '/return'+address, instances[key].add(input, output, id=id)
     
-    @osc.args('/anguilla/remove*')
-    def _(address, id):
-        k = ''.join(address.split('/')[3:]).strip('/')
-        if k in instances:
-            instances[k].remove(id)
+    @osc.handle('/anguilla/remove*')
+    def _(address, id:int):
+        key = get_handle(address)
+        if key in instances:
+            instances[key].remove(id)
         else:
-            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
+            print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
 
-    @osc.args('/anguilla/remove_near*')
-    def _(address, *a):
-        k = ''.join(address.split('/')[3:]).strip('/')
-        if k not in instances:
-            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
-            return
-
-        kw = vector_args(a, scalars=['k'])
-
-        if 'input' not in kw:
-            print(f'ERROR: anguilla: {address}: no input vector supplied')
+    @osc.handle('/anguilla/remove_near*')
+    def _(address, input:Splat[None], k:int=None):
+        key = get_handle(address)
+        if key not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
             return
         
-        instances[k].remove_near(**kw)
+        instances[key].remove_near(input, k=k)
 
-    @osc.args('/anguilla/map*', return_port=osc_return_port)
-    def _(address, *a):
-        k = ''.join(address.split('/')[3:]).strip('/')
-        if k not in instances:
-            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
-            print('ERROR: anguilla: call /anguilla/add at least once before /map')
+    @osc.handle('/anguilla/map*', return_port=osc_return_port)
+    def _(address, input:Splat[None], k:int=None, **kw):
+        key = get_handle(address)
+        if key not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
+            print(f'ERROR: anguilla: call {address.replace("map", "add")} at least once before {address}')
             return
-    
-        kw = vector_args(a, scalars=['k', 'temp', 'ripple'])
 
-        if 'input' not in kw:
-            print('ERROR: anguilla: no input vector supplied')
-            return
-        
-        result = instances[k].map(**kw).tolist()
+        # print(f'{kw=}')
+        result = instances[key].map(input, k=k, **kw).tolist()
 
         return '/return'+address, *result
     
-    @osc.args('/anguilla/reset*')
-    def _(address, *a):
-        k = ''.join(address.split('/')[3:]).strip('/')
-        if k not in instances:
-            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
+    @osc.handle('/anguilla/reset*')
+    def _(address, keep_near:Splat[None]=None, k:int=None):
+        key = get_handle(address)
+        if key not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
             return
     
-        kw = vector_args(a, scalars=['k'])
+        instances[key].reset(keep_near, k=k)
 
-        instances[k].reset(**kw)
-
-    @osc.args('/anguilla/load*')
-    def _(address, path):
-        k = ''.join(address.split('/')[3:]).strip('/')
-        assert isinstance(path, str)
+    @osc.handle('/anguilla/load*')
+    def _(address, path:str):
+        k = get_handle(address)
+        
         assert path.endswith('.json'), \
             "ERROR: anguilla: path should end with .json"
+        
         if k=='':
             print(f'loading all IML objects from {path}')
             d = anguilla.serialize.load(path)
@@ -200,14 +168,13 @@ def main(
             print(f'load IML object at "{k}" from {path}')
             instances[k] = IML.load(path)
 
-    @osc.args('/anguilla/save*')
-    def _(address, path):
-        k = ''.join(address.split('/')[3:]).strip('/')
+    @osc.handle('/anguilla/save*')
+    def _(address, path:str):
+        k = get_handle(address)
         if k!='' and k not in instances:
             print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
             return
         
-        assert isinstance(path, str)
         assert path.endswith('.json'), \
             "ERROR: anguilla: path should end with .json"
         

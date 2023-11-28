@@ -130,7 +130,7 @@ class IML(serialize.JSONSerializable):
         """Remove from mapping by proximity to Input
         """
         feature = self.embed(input)
-        self.neighbors.remove_near(feature)
+        self.neighbors.remove_near(feature, k=k)
 
     def search(self, input:Input, k:int=None) -> SearchResult:
         """find k-nearest neighbors
