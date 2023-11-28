@@ -12,26 +12,6 @@ import numpy as np
 from time import time
 from collections import defaultdict
 from typing import Optional
-import json
-
-def vector_args(a, scalars=None):
-    a = list(a)
-    kw = defaultdict(list)
-    k = None
-    while len(a):
-        item = a.pop(0)
-        # print(type(item), item)
-        if isinstance(item, str):
-            k = item
-        else:
-            if k is None:
-                print(f'ERROR: anguilla: bad OSC syntax in {a}')
-            kw[k].append(item)
-    # unwrap scalars
-    for item in scalars or []:
-        if item in kw:
-            kw[item] = kw[item][0]
-    return kw
 
 def get_handle(address):
     return ''.join(address.split('/')[3:]).strip('/')
@@ -84,6 +64,9 @@ def main(
             load IML from file at `path`
         /anguilla/save path
             save IML to file at `path`
+
+        an additional segment in a route is the name of an IML instance which
+        it will target, e.g. /anguilla/add/myinstance
     """
     osc = OSC(osc_host, osc_port)
 
