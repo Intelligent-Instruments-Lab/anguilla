@@ -10,7 +10,7 @@ readme = "README.md"
 python = ">=3.10,<3.13"
 numpy = "^1.23"
 faiss-cpu = {version = "^1.7", optional = true}
-iipyper = {git = "ssh://git@github.com/Intelligent-Instruments-Lab/iipyper.git"}
+iipyper = {path = "../iipyper", develop = true}
 
 [tool.poetry.extras]
 faiss = ["faiss-cpu"]
