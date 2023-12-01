@@ -31,7 +31,9 @@ class Index(JSONSerializable):
 class IndexBrute(Index):
     """
     Optimized for simplicity and flexibility,
-    may not scale to large datasets
+    may not scale to large datasets.
+
+    NOTE: currently no batching support.
     """
     def __init__(self, d:int=None, metric:Callable=None):
         """
