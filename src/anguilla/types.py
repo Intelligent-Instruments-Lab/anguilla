@@ -1,3 +1,5 @@
+# TODO: import types from iipyper?
+
 import numpy as np
 from typing import Any, Optional, List, Tuple, Dict, Union, Callable, Generator
 from typing import NamedTuple
@@ -23,9 +25,6 @@ class SearchResult(NamedTuple):
     outputs:List[Output]
     ids:PairIDs
     scores:Scores
-# IDFeaturePair = namedtuple('IDFeaturePair', ['id', 'feature'])
-# IOPair = namedtuple('IOPair', ['input', 'output'])
-# SearchResult = namedtuple('SearchResult', ['inputs', 'outputs', 'ids', 'scores'])
 
 def _np_coerce(x):
     if hasattr(x, 'numpy'):

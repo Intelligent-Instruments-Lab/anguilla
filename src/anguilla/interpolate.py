@@ -5,13 +5,24 @@ from .serialize import JSONSerializable
 
 class Interpolate(JSONSerializable):
     """
-    Interpolate combines a set of Outputs weighted by similarity scores.
+    `Interpolate` combines a set of `Outputs` weighted by dissimilarity scores.
+
+    The scores depend on the `Metric` used by the `NNSearch`. 
+    They may be, for example, distances or negative cosine similarities.
     """
     def __init__(self, **kw):
         super().__init__(**kw)
 
     def __call__(self, targets: List[Output], scores: Scores) -> Output:
         raise NotImplementedError
+
+class Nearest(Interpolate):
+    """return nearest neighbor (voronoi cell mapping)"""
+    def __init__(self):
+        super().__init__()
+
+    def __call__(self, targets, scores):
+        return targets[np.argmin(scores)]
 
 class Mean(Interpolate):
     """mean of neighbors (piecewise constant mapping)"""
@@ -22,22 +33,24 @@ class Mean(Interpolate):
         return sum(targets) / len(targets)
 
 class Softmax(Interpolate):
-    """mean weighted toward the nearest neighbors.
+    """
+    Like `Mean`, but weighted toward the nearer neighbors.
     
-    when k is small, has discontinuities
-    when temp is large, tends to average out nearby points
-    -> tends to get 'washed out' for larger k / larger temp
+    when `k` is small, has discontinuities
+    when temp is large, acts more like `Mean`.
+    -> tends to get 'washed out' for larger `k` / larger temp
 
-    when temp is small, acts more like voronoi cells
+    when temp is small, acts more like `Nearest` (voronoi cells).
     """
     def __init__(self):
         super().__init__()
 
-    def __call__(self, targets, scores, temp=0.5):
+    def __call__(self, targets:List[Output], scores:List[float], temp:float=0.5):
         """
         Args:
             targets: size [K x ...output_dims...] list or ndarray
             scores: size [K] list or ndarray
+            temp: temperature of softmax
         """
         targets, scores = np_coerce(targets, scores)
         # print(targets.shape, scores.shape)
@@ -60,18 +73,25 @@ class Softmax(Interpolate):
         return result
 
 class Smooth(Interpolate):
-    """non-discontinuous (for k > 2)
+    """
+    Interpolate which is non-discontinuous (for `k` > 2)
     
     tries to prevent discontinuities while preserving the input-output mapping
     exactly where close to data points.
 
-    works well with larger k.
+    works well with larger `k`.
     out-of-domain input areas tend to be averages of many outputs.
     """
     def __init__(self):
         super().__init__()
 
-    def __call__(self, targets, scores, eps=1e-9):#, smooth=False):
+    def __call__(self, targets:List[Output], scores:List[float], eps:float=1e-9):
+        """
+        Args:
+            targets: size [K x ...output_dims...] list or ndarray
+            scores: size [K] list or ndarray
+            eps: small value preventing division by zero
+        """
         targets, scores = np_coerce(targets, scores)
 
         scores = scores + eps
@@ -91,14 +111,25 @@ class Smooth(Interpolate):
         return result
     
 class Ripple(Interpolate):
-    """like Smooth but with high-frequency ripples outside the input domain.
+    """
+    like `Smooth` but with high-frequency ripples outside the input domain.
     
-    works well for making random mappings in high dimensional spaces / bootstrapping expressive mappings from a few points.
+    useful for making random mappings in high dimensional spaces / bootstrapping expressive mappings from a few points.
     """
     def __init__(self):
         super().__init__()
 
-    def __call__(self, targets, scores, ripple=1, ripple_depth=1, eps=1e-9):
+    def __call__(self, 
+            targets:List[Output], scores:List[float], 
+            ripple:float=1, ripple_depth:float=1, eps:float=1e-9):
+        """
+        Args:
+            targets: size [K x ...output_dims...] list or ndarray
+            scores: size [K] list or ndarray
+            ripple: frequency of ripples
+            ripple_depth: amplitude of ripples
+            eps: small value preventing division by zero
+        """
         targets, scores = np_coerce(targets, scores)
 
         scores = scores + eps

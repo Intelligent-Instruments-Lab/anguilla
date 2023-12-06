@@ -11,7 +11,8 @@ class sqL2(Metric):
         return np.sum((a-b)**2, axis=-1)
 
 class Index(JSONSerializable):
-    """base Index class.
+    """
+    base Index class.
     currently no function besides typing, warning of unimplemented features.
     """
     def add(self, feature:Feature, id:Optional[PairID]=None):
@@ -95,7 +96,7 @@ try:
         Only L2 distance supported. 
         `remove` may be slow.
 
-        This is currently a wrapper around faiss.FlatIndexL2 which provides stable ids when using `remove`.
+        This is currently a wrapper around `faiss.FlatIndexL2` which provides stable ids when using `remove`.
         In the future could support dot product and/or approximate search indices.
         """
         def __init__(self, d:int, metric:Callable=sqL2):
@@ -186,16 +187,15 @@ class NNSearch(JSONSerializable):
     """
     This class is the mid-level interface for neighbor search,
     providing some common utilities over the Index subclasses.
-    Users will generally use `IML.search` instead of calling NNSearch directly.
-
-    TODO: possibly get rid of this class and fold it into IML?
-        * currently adds only complexity to the IML implementation
-        * but could be useful if needing NNSearch without Feature/Interpolate?
+    Users will generally use `IML.search` instead of calling `NNSearch` directly.
     """
+    # TODO: possibly get rid of this class and fold it into IML?
+    #     * currently adds only complexity to the IML implementation
+    #     * but could be useful if needing NNSearch without Embed/Interpolate?
     def __init__(self, index:Index, k=10):
         """
         Args:
-            index: instance of Index
+            index: instance of `Index`
             k: default k-nearest neighbors (but can be overridden later)
         """
         super().__init__(index=index, k=k)
@@ -215,7 +215,7 @@ class NNSearch(JSONSerializable):
         k = k or self.default_k
         return self.index.search(feature, k)
     
-    def distance(self, a:Feature, b:Feature):
+    def distance(self, a:Feature, b:Feature) -> float:
         """compute distance between two features"""
         return self.index.metric(a, b)
 
