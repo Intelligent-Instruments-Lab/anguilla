@@ -1,6 +1,7 @@
 [tool.poetry]
-name = "anguilla"
-version = "0.1.0-beta0"
+name = "anguilla-iml"
+packages = [{ include = "../anguilla"}]
+version = "0.1.0-beta1"
 description = "a package for interactive machine learning"
 authors = ["Victor Shepardson <victor.shepardson@gmail.com>"]
 license = "MIT"

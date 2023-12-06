@@ -28,6 +28,7 @@ def test_project_and_sort(setup_iml):
     _z[:] = torch.from_numpy(iml.map(ctrl, k=5))
     indices = torch.randperm(ctrl.shape[0])
 
+    # test invariance to order along batch dimension
     def update_pos():
         nonlocal ctrl, indices, z
         indices = torch.randperm(ctrl.shape[0])

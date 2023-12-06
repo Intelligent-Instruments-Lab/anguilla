@@ -75,19 +75,22 @@ class ProjectAndSort(Embedding):
         assert len(input_size)==2, "ProjectAndSort expects fixed-size 2D array data"
 
         self.n = n
+        self.seed = seed
+
         if input_size is not None:
             self.init(input_size)
         else:
             self.input_size = None
 
-        self.rng = np.random.default_rng(seed)
 
     def init(self, input_size):
+        self.rng = np.random.default_rng(self.seed)
+
         self.input_size = tuple(input_size)
 
         self.size = input_size[0] * self.n
 
-        proj = self.rng.randn(input_size[1], self.n)
+        proj = self.rng.normal(size=(input_size[1], self.n))
         proj = proj / np.linalg.norm(proj, axis=0, keepdims=True)
         self.proj = proj
 
