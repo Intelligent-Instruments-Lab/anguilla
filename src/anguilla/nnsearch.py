@@ -106,11 +106,16 @@ try:
                 metric: 
             """
             super().__init__(d=d, metric=metric)
-            if metric==sqL2:
+            self.metric = metric
+            self.index = None
+            if d is not None:
+                self.init(d)
+
+        def init(self, d):
+            if isinstance(self.metric, sqL2):
                 self.index = IndexFlatL2(d)
             else:
                 raise ValueError("""IndexFast supports only sqL2 metric""")
-            self.metric = metric
             self.reset()
 
         @property
@@ -125,6 +130,9 @@ try:
                     otherwise, use the supplied id.
                     supply an existing id to replace.
             """
+            if self.index is None:
+                self.init(feature.shape[-1])
+
             if id is None:
                 # no id supplied case
                 id = max(self.id_to_idx, default=-1) + 1
