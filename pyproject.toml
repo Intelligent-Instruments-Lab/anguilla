@@ -1,7 +1,6 @@
 [tool.poetry]
-name = "anguilla-iml"
-packages = [{ include = "../anguilla"}]
-version = "0.1.0-beta1"
+name = "anguilla"
+version = "0.1.0"
 description = "a package for interactive machine learning"
 authors = ["Victor Shepardson <victor.shepardson@gmail.com>"]
 license = "MIT"
@@ -11,7 +10,7 @@ readme = "README.md"
 python = ">=3.10,<3.13"
 numpy = "^1.23"
 faiss-cpu = {version = "^1.7", optional = true}
-iipyper = "0.1.*"
+iipyper = {path = "../iipyper", develop = true}
 
 [tool.poetry.extras]
 faiss = ["faiss-cpu"]
