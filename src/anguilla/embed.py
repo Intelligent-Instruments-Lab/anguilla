@@ -11,13 +11,30 @@ class Embedding(JSONSerializable):
         raise NotImplementedError
 
 class Identity(Embedding):
-    """For fixed-length vector data: just check size and convert to numpy array"""
-    def __init__(self, size):
-        """size is both the Input and Feature size"""
+    """
+    The most basic Embedding. 
+    Optionally checks size of input vector and ensures it is a numpy array, 
+    but otherwise leaves it unchanged.
+    """
+    def __init__(self, size:Optional[int]=None):
+        """
+        Args:
+            size: both the Input and the Feature size.
+                if supplied, inputs will be validated.
+        """
         super().__init__(size=size)
         self.size = self.input_size = size
 
-    def __call__(self, source):
+    def __call__(self, source) -> ArrayLike:
+        """
+        embed the input.
+
+        Args:
+            source: an input sequence
+        
+        Returns:
+            feature: the input sequence as a numpy array.
+        """
         source, = np_coerce(source)
         if self.size is not None:
             assert source.shape[-1] == self.size, (source.shape, self.size)
@@ -25,8 +42,8 @@ class Identity(Embedding):
     
 class ProjectAndSort(Embedding):
     """
-    for point cloud-like data.
-    use with L2 distance to compute sliced optimal transport.
+    Embedding for point cloud-like data.
+    use with an L2 distance `Metric` to compute sliced optimal transport.
 
     if an Input is a 2D array [B x C],
     B being the batch dimension (order not meaningful)
@@ -46,13 +63,15 @@ class ProjectAndSort(Embedding):
     and then concatenates to make one feature vector.
     the L2 distance between feature vectors is the sliced OT distance between point clouds.
     """
-    def __init__(self, input_size:Tuple[int,int]=None, n:int=16):
+    def __init__(self, input_size:Tuple[int,int]=None, n:int=16, seed:int=0):
         """
         Args:
             input_size: input shape [B,C]; if None, lazy init on first __call__
             n: number of random projections.
+            seed: random seed.
         """
         super().__init__(input_size=input_size, n=n)
+        # TODO: batching support here
         assert len(input_size)==2, "ProjectAndSort expects fixed-size 2D array data"
 
         self.n = n
@@ -61,16 +80,28 @@ class ProjectAndSort(Embedding):
         else:
             self.input_size = None
 
+        self.rng = np.random.default_rng(seed)
+
     def init(self, input_size):
         self.input_size = tuple(input_size)
 
         self.size = input_size[0] * self.n
 
-        proj = np.random.randn(input_size[1], self.n)
+        proj = self.rng.randn(input_size[1], self.n)
         proj = proj / np.linalg.norm(proj, axis=0, keepdims=True)
         self.proj = proj
 
-    def __call__(self, source):
+    def __call__(self, source) -> ArrayLike:
+        """
+        embed the input.
+
+        Args:
+            source: an 2d input sequence of shape [batch x coordinates]     
+                representing a set of points.
+        
+        Returns:
+            feature: 1d array of concatenated projections of the input points.
+        """
         source, = np_coerce(source)
         if self.input_size is None:
             # lazy init

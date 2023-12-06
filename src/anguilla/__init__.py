@@ -60,7 +60,9 @@ class IML(serialize.JSONSerializable):
         self.reset()
 
     def reset(self, keep_near:Input=None, k:int=None):
-        """delete all data
+        """
+        delete all data
+
         Args:
             keep_near: don't remove the neighbors of this input
             k: number of neighbors for above
@@ -89,11 +91,14 @@ class IML(serialize.JSONSerializable):
             output: Output, 
             id: Optional[PairID]=None
             ) -> PairID:
-        """Add a data point to the mapping.
+        """
+        Add a data point to the mapping.
+        
         Args:
             input: Input item
             output: Output item
             id: PairID to use; if an existing id, replace the point
+
         Returns:
             id: id of the new data point if you need to reference it later
         """
@@ -105,14 +110,23 @@ class IML(serialize.JSONSerializable):
         return id
     
     def get(self, id:PairID) -> IOPair:
-        """look up an Input/Output pair by ID"""
+        """
+        look up an Input/Output pair by ID
+
+        Args:
+            ids: ID to look up.
+        """
         try:
             return self.pairs[id]
         except Exception:
             print("NNSearch: WARNING: can't `get` ID which doesn't exist or has been removed")
 
     def remove(self, ids:Union[PairID, PairIDs]):
-        """Remove from mapping by ID(s)
+        """
+        Remove from mapping by ID(s)
+
+        Args:
+            ids: ID or collection of IDs of points to remove from the mapping.
         """
         # iterable of ids case:
         if hasattr(ids, '__len__'):
@@ -127,16 +141,20 @@ class IML(serialize.JSONSerializable):
             self.neighbors.remove(ids)
 
     def remove_near(self, input:Input, k:int=None):
-        """Remove from mapping by proximity to Input
+        """
+        Remove from mapping by proximity to Input
         """
         feature = self.embed(input)
         self.neighbors.remove_near(feature, k=k)
 
     def search(self, input:Input, k:int=None) -> SearchResult:
-        """find k-nearest neighbors
+        """
+        find k-nearest neighbors
+
         Args:
             input: input item
             k: max number of neighbors
+
         Returns:
             inputs: neighboring Inputs
             outputs: corresponding Outputs
@@ -148,6 +166,8 @@ class IML(serialize.JSONSerializable):
         # handle case where there are fewer than k neighbors
         if not len(ids):
             raise RuntimeError('no points in mapping. add some!')
+        
+        # NOTE: needs batching support
         inputs, outputs = zip(*(self.pairs[i] for i in ids))
 
         # TODO: text-mode visualize scores
@@ -162,6 +182,7 @@ class IML(serialize.JSONSerializable):
             input: input
             k: max neighbors
             **kw: additional arguments are passed to interpolate
+
         Returns:
             output instance
         """
@@ -172,7 +193,9 @@ class IML(serialize.JSONSerializable):
         return result
     
     def save_state(self):
-        """return dataset from this IML object.
+        """
+        return dataset from this IML object.
+
         Returns:
             state: data in this IML object
         """
@@ -181,7 +204,9 @@ class IML(serialize.JSONSerializable):
         }
     
     def load_state(self, state):
-        """load dataset into this IML object.
+        """
+        load dataset into this IML object.
+
         Args:
             state: data as obtained from `save_state`
         """
@@ -189,7 +214,9 @@ class IML(serialize.JSONSerializable):
             self.add(*pair, id=PairID(id))        
 
     def save(self, path:str):
-        """serialize the whole IML object to JSON
+        """
+        serialize the whole IML object to JSON
+
         Args:
             path: path to JSON file
         """
@@ -197,9 +224,12 @@ class IML(serialize.JSONSerializable):
 
     @classmethod
     def load(cls, path):
-        """deserialize a new IML object from JSON
+        """
+        deserialize a new IML object from JSON
+
         Args:
             path: path to JSON file
+
         Returns:
             new IML instance
         """
