@@ -243,7 +243,7 @@ class NNSearch(JSONSerializable):
         Remove point(s) from the index by ID
         """
         # iterable of ids case:
-        if hasattr(ids, '__len__'):
+        if not isinstance(ids, str) and hasattr(ids, '__len__'):
             for id in ids:
                 self.remove(id)
         # single id case:

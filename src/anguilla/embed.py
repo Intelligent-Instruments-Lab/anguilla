@@ -40,6 +40,64 @@ class Identity(Embedding):
             assert source.shape[-1] == self.size, (source.shape, self.size)
         return source
     
+# Random, RandomNormal embedding,
+# item is hashed and used to sample a distribution
+class Random(Embedding):
+    """
+    Pseudo-random uniform embedding in [-1, 1] for any hashable inputs.
+    """
+    def __init__(self, size:int=1):
+        """
+        Args:
+            size: the Feature size.
+        """
+        super().__init__(size=size)
+        self.input_size = None
+        self.size = size
+
+    def __call__(self, source) -> ArrayLike:
+        """
+        embed the input.
+
+        Args:
+            source: an input sequence
+        
+        Returns:
+            feature: uniformly distributed pseudo-random vector
+        """
+        # get 32 bits from the input
+        h = hash(source) & 8589934591
+        rng = np.random.default_rng(h)
+        return rng.random(size=self.size)*2 - 1
+    
+class RandomNormal(Embedding):
+    """
+    Pseudo-random Gaussian embedding for any hashable inputs.
+    """
+    def __init__(self, size:int=1):
+        """
+        Args:
+            size: the Feature size.
+        """
+        super().__init__(size=size)
+        self.input_size = None
+        self.size = size
+
+    def __call__(self, source) -> ArrayLike:
+        """
+        embed the input.
+
+        Args:
+            source: an input sequence
+        
+        Returns:
+            feature: normally distributed pseudo-random vector
+        """
+        # get 32 bits from the input
+        h = hash(source) & 8589934591
+        rng = np.random.default_rng(h)
+        return rng.normal(size=self.size)
+
 class ProjectAndSort(Embedding):
     """
     Embedding for point cloud-like data.
@@ -121,3 +179,30 @@ class ProjectAndSort(Embedding):
         feat = feat.reshape((*feat.shape[:-2], -1))
 
         return feat / np.sqrt(self.size)
+
+### Embeddings for combining other Embeddings
+
+class Cat(Embedding):
+    """
+    Embedding which applies multiple other embeddings to elements of a sequence,
+    and concatenates the results
+    """
+    def __init__(self, *embs):
+        self.embs = embs
+    def __call__(self, sources):
+        assert len(sources)==len(self.embs)
+        parts = [emb(source) for source, emb in zip(sources, self.embs)]
+        # convert 0d scalars to 1d before cat
+        parts = [p[None] if p.ndim==0 else p for p in parts]
+        return np.concatenate(parts, -1)
+    
+class Chain(Embedding):
+    """
+    Embedding which applies multiple embeddings in series to the same input
+    """
+    def __init__(self, *embs):
+        self.embs = embs
+    def __call__(self, source):
+        for emb in self.embs:
+            source = emb(source)
+        return source

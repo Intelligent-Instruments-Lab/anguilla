@@ -5,8 +5,6 @@ from typing import Any, Optional, List, Tuple, Dict, Union, Callable, Generator
 from typing import NamedTuple
 from numpy.typing import ArrayLike
 
-from collections import namedtuple
-
 Input = Any # thing that goes into a mapping
 Output = Any # thing that comes out of a mapping
 Feature = ArrayLike # Inputs are mapped to Features
@@ -29,10 +27,12 @@ class SearchResult(NamedTuple):
 def _np_coerce(x):
     if hasattr(x, 'numpy'):
         return x.numpy()
-    elif hasattr(x, '__len__') and hasattr(x[0], 'numpy'):
-        return np.stack(tuple(item.numpy() for item in x))
     else:
-        return np.array(x)
+        try:
+            assert hasattr(x[0], 'numpy')
+            return np.stack(tuple(item.numpy() for item in x))
+        except Exception:
+            return np.array(x)
 
 def np_coerce(*a):
     return (_np_coerce(x) for x in a)

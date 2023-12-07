@@ -102,6 +102,10 @@ class IML(serialize.JSONSerializable):
         Returns:
             id: id of the new data point if you need to reference it later
         """
+        if not isinstance(id, str) and hasattr(id, '__len__'):
+            # refuse any id which is a non-string sequence
+            # sequences are used for batches of ids
+            raise ValueError("can't use object with __len__ as a PairID")
         if self.verbose: print(f'add {input=}, {output=}')
         feature = self.embed(input)
         id = self.neighbors.add(feature, id)
@@ -140,12 +144,12 @@ class IML(serialize.JSONSerializable):
                 print(f"IML: WARNING: can't `remove` ID {ids} which doesn't exist or has already been removed")
             self.neighbors.remove(ids)
 
-    def remove_near(self, input:Input, k:int=None):
+    def remove_near(self, input:Input, k:int=None) -> PairIDs:
         """
         Remove from mapping by proximity to Input
         """
         feature = self.embed(input)
-        self.neighbors.remove_near(feature, k=k)
+        return self.neighbors.remove_near(feature, k=k)
 
     def search(self, input:Input, k:int=None) -> SearchResult:
         """
