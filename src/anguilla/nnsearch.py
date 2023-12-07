@@ -3,6 +3,11 @@ from .types import *
 from .serialize import JSONSerializable
 
 class Metric(JSONSerializable):
+    """
+    define a distance between two points. 
+    Relative distances will be used to find nearest neighbors,
+    and the distances to neighbors will be passed to `Interpolate`.
+    """
     def __call__(self, a, b):
         raise NotImplementedError
 
@@ -14,6 +19,9 @@ class Index(JSONSerializable):
     """
     base Index class.
     currently no function besides typing, warning of unimplemented features.
+
+    Subclasses of Index implement nearest neighbor search with different
+    cababilities and performance tradeoffs.
     """
     def add(self, feature:Feature, id:Optional[PairID]=None):
         raise NotImplementedError
@@ -241,30 +249,33 @@ class NNSearch(JSONSerializable):
             return self.index.get(id)
         except Exception:
             print(f"NNSearch: WARNING: can't `get` ID {id} which doesn't exist or has been removed")
+
     
-    def remove(self, ids: Union[PairID, PairIDs]):
+    def remove(self, id: Union[PairID, PairIDs], batch:bool=False):
         """
         Remove point(s) from the index by ID
-        """
-        # iterable of ids case:
-        if not isinstance(ids, str) and hasattr(ids, '__len__'):
-            for id in ids:
-                self.remove(id)
-        # single id case:
+
+        Args:
+            id: id or sequence of ids
+            batch: True if removing a batch of ids, False if a single id.
+        """        
+        if batch:
+            return [self.remove(i) for i in id]
         else:
             try:
-                self.index.remove(ids)
+                return self.index.remove(id)
             except Exception:
-                print(f"NNSearch: WARNING: can't `remove` ID {ids} which doesn't exist or has already been removed")
+                print(f"NNSearch: WARNING: can't `remove` ID {id} which doesn't exist or has already been removed")
 
     def remove_near(self, feature:Feature, k:int=None) -> PairIDs:
         """
         Remove point(s) from the index by proximity.
         Use k=1 to remove a single point.
         """
+        # TODO: batching support?
         k = k or self.default_k
         ids, _ = self(feature, k=k)
-        self.remove(ids)
+        self.remove(ids, batch=True)
         return ids
     
     def reset(self):

@@ -33,7 +33,11 @@ class Nearest(Interpolate):
         super().__init__()
 
     def __call__(self, targets, scores):
-        return targets[np.argmin(scores)]
+        idx = np.argmin(scores, 0)
+        if idx.ndim > 1:
+            return [targets[i,j] for j,i in enumerate(idx)]
+        else:
+            return targets[idx]
 
 class Mean(Interpolate):
     """mean of neighbors (piecewise constant mapping)"""
@@ -59,27 +63,30 @@ class Softmax(Interpolate):
     def __call__(self, targets:List[Output], scores:List[float], temp:float=0.5):
         """
         Args:
-            targets: size [K x ...output_dims...] list or ndarray
-            scores: size [K] list or ndarray
+            targets: size [K x ...batch dims... x ...output_dims...] 
+            scores: size [K x ...batch dims...] 
             temp: temperature of softmax
         """
         targets, scores = np_coerce(targets, scores)
         # print(targets.shape, scores.shape)
 
         if temp==0:
-            result = targets[np.argmin(scores)]
+            result = Nearest()(targets, scores)
         else:
-            centered = scores - np.mean(scores) # for numerical precision
+            centered = scores - np.mean(scores, 0) # for numerical precision
             logits = np.maximum(-centered/temp, -20)
             # print(f'{logits=}')
             if np.max(np.abs(logits)) > 80:
-                result = targets[np.argmin(scores)]
+                # NOTE: not batched properly
+                result = Nearest()(targets, scores)
             else:
                 weights = np.exp(logits)
                 # print(f'{weights=}')
-                weights /= weights.sum()
+                weights /= weights.sum(0)
                 # print(f'{weights=}')
-                result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
+                # result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
+                result = np.transpose((
+                    np.transpose(targets)*np.transpose(weights)).sum(-1))
         # print(f'{result=}')
         return result
 
@@ -99,8 +106,8 @@ class Smooth(Interpolate):
     def __call__(self, targets:List[Output], scores:List[float], eps:float=1e-9):
         """
         Args:
-            targets: size [K x ...output_dims...] list or ndarray
-            scores: size [K] list or ndarray
+            targets: size [K x ...batch dims... x ...output_dims...] 
+            scores: size [K x ...batch dims...] 
             eps: small value preventing division by zero
         """
         targets, scores = np_coerce(targets, scores)
@@ -111,13 +118,15 @@ class Smooth(Interpolate):
         # largest scores -> 0 weight
         # zero score -> inf weight
         # zero first/second derivative at largest score
-        mx = np.max(scores)
+        mx = np.max(scores, 0)
         weights = 1/scores + (-3*mx*mx + 3*mx*scores - scores*scores)/(mx**3)
 
         weights = weights + eps
-        weights = weights / weights.sum()
+        weights = weights / weights.sum(0)
 
-        result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
+        # result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
+        result = np.transpose((
+            np.transpose(targets)*np.transpose(weights)).sum(-1))
 
         return result
     
@@ -148,7 +157,7 @@ class Ripple(Interpolate):
 
         # largest scores -> 0 weight
         # zero score -> inf weight
-        mx = np.max(scores)
+        mx = np.max(scores, 0)
         weights = 1/scores + (-3*mx*mx + 3*mx*scores - scores*scores)/(mx**3)
         weights = weights * 2**(
             ripple_depth * 
@@ -156,8 +165,10 @@ class Ripple(Interpolate):
             )
 
         weights = weights + eps
-        weights = weights / weights.sum()
+        weights = weights / weights.sum(0)
 
-        result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
+        # result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
+        result = np.transpose((
+            np.transpose(targets)*np.transpose(weights)).sum(-1))
 
         return result
