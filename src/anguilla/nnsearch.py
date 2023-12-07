@@ -3,6 +3,11 @@ from .types import *
 from .serialize import JSONSerializable
 
 class Metric(JSONSerializable):
+    """
+    define a distance between two points. 
+    Relative distances will be used to find nearest neighbors,
+    and the distances to neighbors will be passed to `Interpolate`.
+    """
     def __call__(self, a, b):
         raise NotImplementedError
 
@@ -14,7 +19,14 @@ class Index(JSONSerializable):
     """
     base Index class.
     currently no function besides typing, warning of unimplemented features.
+
+    Subclasses of Index implement nearest neighbor search with different
+    cababilities and performance tradeoffs.
     """
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.is_batched = False
+
     def add(self, feature:Feature, id:Optional[PairID]=None):
         raise NotImplementedError
     def remove(self, id:PairID):
@@ -106,7 +118,12 @@ try:
                 metric: 
             """
             super().__init__(d=d, metric=metric)
-            self.metric = metric
+            self.is_batched = True # `search` supports batching
+
+            if isinstance(metric, type) and issubclass(metric, Metric):
+                self.metric = metric()
+            else:
+                self.metric = metric
             self.index = None
             if d is not None:
                 self.init(d)
@@ -166,19 +183,40 @@ try:
 
         def search(self, feature:Feature, k:int=3) -> Tuple[PairIDs, Scores]:
             """get feature(s) and IDs by proximity"""
-            feature = feature[None].astype(np.float32) 
+            feature, = np_coerce(feature)
+            batch = feature.ndim>1
+            # print(f'{batch=}', feature.ndim)
+            feature = feature.astype(np.float32) 
+            if not batch:
+                feature = feature[None]
+
             scores, idxs = self.index.search(feature, k)
-            # remove batch dim
-            scores, idxs = scores[0], idxs[0]
+
             # remove -1 ids
-            b = [i>=0 for i in idxs] 
-            scores, idxs = scores[b], idxs[b]
+            # assuming pattern of missing is same across batch
+            # should be, since only reason for missing is <k data points
+            b = [i>=0 for i in idxs[0]] 
+            scores, idxs = scores[:,b], idxs[:,b]
+             
             # map back to ids
-            ids = [self.idx_to_id[i] for i in idxs]
+            ids = [[self.idx_to_id[i] for i in idx] for idx in idxs]
+            
+            if not batch:
+                # remove batch dim
+                scores, ids = scores[0], ids[0]
+
+            # # remove batch dim
+            # scores, idxs = scores[0], idxs[0]
+            # # remove -1 ids
+            # b = [i>=0 for i in idxs] 
+            # scores, idxs = scores[b], idxs[b]
+            # # map back to ids
+            # ids = [self.idx_to_id[i] for i in idxs]
             return ids, scores  
         
         def reset(self):
-            self.index.reset()
+            if self.index is not None:
+                self.index.reset()
             self.idx_to_id:Dict[int, PairID] = {}
             self.id_to_idx:Dict[PairID, int] = {}
 
@@ -237,30 +275,33 @@ class NNSearch(JSONSerializable):
             return self.index.get(id)
         except Exception:
             print(f"NNSearch: WARNING: can't `get` ID {id} which doesn't exist or has been removed")
+
     
-    def remove(self, ids: Union[PairID, PairIDs]):
+    def remove(self, id: Union[PairID, PairIDs], batch:bool=False):
         """
         Remove point(s) from the index by ID
-        """
-        # iterable of ids case:
-        if not isinstance(ids, str) and hasattr(ids, '__len__'):
-            for id in ids:
-                self.remove(id)
-        # single id case:
+
+        Args:
+            id: id or sequence of ids
+            batch: True if removing a batch of ids, False if a single id.
+        """        
+        if batch:
+            return [self.remove(i) for i in id]
         else:
             try:
-                self.index.remove(ids)
+                return self.index.remove(id)
             except Exception:
-                print(f"NNSearch: WARNING: can't `remove` ID {ids} which doesn't exist or has already been removed")
+                print(f"NNSearch: WARNING: can't `remove` ID {id} which doesn't exist or has already been removed")
 
     def remove_near(self, feature:Feature, k:int=None) -> PairIDs:
         """
         Remove point(s) from the index by proximity.
         Use k=1 to remove a single point.
         """
+        # TODO: batching support?
         k = k or self.default_k
         ids, _ = self(feature, k=k)
-        self.remove(ids)
+        self.remove(ids, batch=True)
         return ids
     
     def reset(self):

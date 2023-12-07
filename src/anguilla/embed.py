@@ -6,6 +6,9 @@ import numpy as np
 class Embedding(JSONSerializable):
     def __init__(self, **kw):
         super().__init__(**kw)
+        # set to True if ArrayLike inputs with
+        # leading batch dimensions are supported
+        self.is_batched = False
 
     def __call__(self, source: Input) -> Feature:
         raise NotImplementedError
@@ -20,10 +23,12 @@ class Identity(Embedding):
         """
         Args:
             size: both the Input and the Feature size.
-                if supplied, inputs will be validated.
+                if supplied, inputs will be validated to be that size.
+                otherwise, they will just be converted to ndarrays.
         """
         super().__init__(size=size)
         self.size = self.input_size = size
+        self.is_batched = True
 
     def __call__(self, source) -> ArrayLike:
         """
@@ -37,7 +42,7 @@ class Identity(Embedding):
         """
         source, = np_coerce(source)
         if self.size is not None:
-            assert source.shape[-1] == self.size, (source.shape, self.size)
+            assert source.shape[-len(self.size):] == self.size, (source.shape, self.size)
         return source
     
 # Random, RandomNormal embedding,
@@ -60,11 +65,13 @@ class Random(Embedding):
         embed the input.
 
         Args:
-            source: an input sequence
+            source: a hashable input. cannot be batched.
         
         Returns:
             feature: uniformly distributed pseudo-random vector
         """
+        # TODO: treat lists as batches?
+
         # get 32 bits from the input
         h = hash(source) & 8589934591
         rng = np.random.default_rng(h)
@@ -104,7 +111,7 @@ class ProjectAndSort(Embedding):
     use with an L2 distance `Metric` to compute sliced optimal transport.
 
     if an Input is a 2D array [B x C],
-    B being the batch dimension (order not meaningful)
+    B being the point dimension (order not meaningful)
     and C being the coordinate dimension (order meaningful)
 
     e.g.
@@ -129,19 +136,19 @@ class ProjectAndSort(Embedding):
             seed: random seed.
         """
         super().__init__(input_size=input_size, n=n)
-        # TODO: batching support here
-        assert len(input_size)==2, "ProjectAndSort expects fixed-size 2D array data"
-
         self.n = n
         self.seed = seed
+        self.is_batched = True
 
         if input_size is not None:
             self.init(input_size)
         else:
             self.input_size = None
-
+            self.size = None
 
     def init(self, input_size):
+        assert len(input_size)>=2, "ProjectAndSort expects at least 2D array data"
+
         self.rng = np.random.default_rng(self.seed)
 
         self.input_size = tuple(input_size)
