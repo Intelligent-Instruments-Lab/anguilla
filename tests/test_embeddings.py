@@ -25,3 +25,7 @@ def test_cat_random(x, d):
     r = Random(d)
     emb = Cat(*[r]*len(x))
     assert np.allclose(emb(x), emb(x))
+
+    r = RandomNormal(d)
+    emb = Cat(*[r]*len(x))
+    assert np.allclose(emb(x), emb(x))
