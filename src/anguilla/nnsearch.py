@@ -23,6 +23,10 @@ class Index(JSONSerializable):
     Subclasses of Index implement nearest neighbor search with different
     cababilities and performance tradeoffs.
     """
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.is_batched = False
+
     def add(self, feature:Feature, id:Optional[PairID]=None):
         raise NotImplementedError
     def remove(self, id:PairID):
@@ -114,6 +118,8 @@ try:
                 metric: 
             """
             super().__init__(d=d, metric=metric)
+            self.is_batched = True # `search` supports batching
+
             if isinstance(metric, type) and issubclass(metric, Metric):
                 self.metric = metric()
             else:
@@ -177,15 +183,35 @@ try:
 
         def search(self, feature:Feature, k:int=3) -> Tuple[PairIDs, Scores]:
             """get feature(s) and IDs by proximity"""
-            feature = feature[None].astype(np.float32) 
+            feature, = np_coerce(feature)
+            batch = feature.ndim>1
+            # print(f'{batch=}', feature.ndim)
+            feature = feature.astype(np.float32) 
+            if not batch:
+                feature = feature[None]
+
             scores, idxs = self.index.search(feature, k)
-            # remove batch dim
-            scores, idxs = scores[0], idxs[0]
+
             # remove -1 ids
-            b = [i>=0 for i in idxs] 
-            scores, idxs = scores[b], idxs[b]
+            # assuming pattern of missing is same across batch
+            # should be, since only reason for missing is <k data points
+            b = [i>=0 for i in idxs[0]] 
+            scores, idxs = scores[:,b], idxs[:,b]
+             
             # map back to ids
-            ids = [self.idx_to_id[i] for i in idxs]
+            ids = [[self.idx_to_id[i] for i in idx] for idx in idxs]
+            
+            if not batch:
+                # remove batch dim
+                scores, ids = scores[0], ids[0]
+
+            # # remove batch dim
+            # scores, idxs = scores[0], idxs[0]
+            # # remove -1 ids
+            # b = [i>=0 for i in idxs] 
+            # scores, idxs = scores[b], idxs[b]
+            # # map back to ids
+            # ids = [self.idx_to_id[i] for i in idxs]
             return ids, scores  
         
         def reset(self):

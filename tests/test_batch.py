@@ -34,5 +34,6 @@ def test_batching(index, emb, interp):
         zs.append(iml.map(x))
     zs = np.stack(zs, 0)
 
-    print(zs_batch[0], zs[0])
+    # print(zs_batch[0], zs[0])
+    print('max error is', np.max(np.abs((zs_batch - zs))))
     assert np.allclose(zs_batch, zs)

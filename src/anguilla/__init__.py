@@ -212,35 +212,58 @@ class IML(serialize.JSONSerializable):
         feature = self.embed(input)
         return self.neighbors.remove_near(feature, k=k)
     
-    def search_batch(self, inputs:List[Input], k:int=None) -> SearchResult:
+    def search_batch(self, inputs:List[Input], k:int=None, from_map=False) -> SearchResult:
         """
+        find k-nearest neighbors for each batch item
+
+        Args:
+            input: input item
+            k: max number of neighbors
+            from_map: if True, skip collating inputs and ids and set them to None 
+
         Returns:
-            result: neighbor dimension is first
+            inputs: neighboring Inputs
+            outputs: corresponding Outputs
+            ids: ids of Input/Output pairs
+            scores: dissimilarity Scores
+
+        Note: neighbor dimension is first
         """
         features = self.embed_batch(inputs)
 
+        if self.neighbors.index.is_batched:
+            ids_batch, scores_batch = self.neighbors(features, k=k)
+        else:
+            # index does not support batching case
+            ids_batch = []
+            scores_batch = []
+            for feature in features:
+                ids, scores = self.neighbors(feature, k=k)
+                ids_batch.append(ids)
+                scores_batch.append(scores)
+
         inputs_batch = []
         outputs_batch = []
-        ids_batch = []
-        scores_batch = []
 
-        # TODO: batched nnsearch
-        for feature in features:
-            ids, scores = self.neighbors(feature, k=k)
+        # get i/o pairs from ids
+        # NOTE: bottleneck is here for `map` on large batches
+        for feature, ids, scores in zip(features, ids_batch, scores_batch):
             # handle case where there are fewer than k neighbors
             if not len(ids):
                 raise RuntimeError('no points in mapping. add some!')
             
-            inputs, outputs = zip(*(self.pairs[i] for i in ids))
+            # inputs, outputs = zip(*(self.pairs[i] for i in ids))
+            outputs_batch.append([self.pairs[i].output for i in ids])
+            if not from_map:
+                inputs_batch.append([self.pairs[i].input for i in ids])
 
-            inputs_batch.append(inputs)
-            outputs_batch.append(outputs)
-            ids_batch.append(ids)
-            scores_batch.append(scores)
-
-        inputs = np.stack(inputs_batch, 1)
+        # neighbor dimension goes first
+        if from_map:
+            inputs, ids = None, None
+        else:
+            inputs = np.stack(inputs_batch, 1)
+            ids = np.stack(ids_batch, 1)
         outputs = np.stack(outputs_batch, 1)
-        ids = np.stack(ids_batch, 1)
         scores = np.stack(scores_batch, 1)
 
         return SearchResult(inputs, outputs, ids, scores)
@@ -273,19 +296,17 @@ class IML(serialize.JSONSerializable):
         return SearchResult(inputs, outputs, ids, scores)
     
     def map_batch(self, inputs:List[Input], k:int=None, **kw):
-        # outputs_batch = []
-        # scores_batch = []
-        # for input in inputs:
-        #     # TODO: batched search
-        #     _, outputs, _, scores = self.search(input, k)
-        #     outputs_batch.append(outputs)
-        #     scores_batch.append(scores)
+        """convert a batch of Input to batch of Output using search + interpolate
 
-        # return self.interpolate(
-        #     np.stack(outputs_batch, 1), 
-        #     np.stack(scores_batch, 1)
-        #     )
-        _, outputs, _, scores = self.search_batch(inputs, k)
+        Args:
+            input: [batch x ...]
+            k: max neighbors
+            **kw: additional arguments are passed to interpolate
+
+        Returns:
+            output instance
+        """
+        _, outputs, _, scores = self.search_batch(inputs, k, from_map=True)
         return self.interpolate(outputs, scores, **kw)
 
     def map(self, input:Input, k:int=None, **kw) -> Output:
