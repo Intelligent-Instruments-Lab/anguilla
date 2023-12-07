@@ -106,7 +106,10 @@ try:
                 metric: 
             """
             super().__init__(d=d, metric=metric)
-            self.metric = metric
+            if isinstance(metric, type) and issubclass(metric, Metric):
+                self.metric = metric()
+            else:
+                self.metric = metric
             self.index = None
             if d is not None:
                 self.init(d)
@@ -178,7 +181,8 @@ try:
             return ids, scores  
         
         def reset(self):
-            self.index.reset()
+            if self.index is not None:
+                self.index.reset()
             self.idx_to_id:Dict[int, PairID] = {}
             self.id_to_idx:Dict[PairID, int] = {}
 

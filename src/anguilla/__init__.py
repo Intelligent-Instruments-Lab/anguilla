@@ -10,7 +10,6 @@ from . import serialize
 class IML(serialize.JSONSerializable):
 
     def __init__(self, 
-            feature_size:Optional[int]=None, 
             emb:Union[str,embed.Embedding]=None, 
             interp:Union[str,interpolate.Interpolate]=None,
             index:nnsearch.Index=None,
@@ -18,18 +17,19 @@ class IML(serialize.JSONSerializable):
             verbose=False):
         """
         Args:
-            feature_size: dimension of feature vectors
-            embed: instance or name of Feature subclass (defaults to Identity)
-            interp: instance or name of Interpolate subclass (defaults to Smooth)
+            embed: instance, type or name of Feature subclass (defaults to Identity)
+            interp: instance, type or name of Interpolate subclass (defaults to Smooth)
             index: instance of Index (defaults to IndexBrute)
             k: default k-nearest neighbors (can be overridden later)
         """
         self.verbose = verbose
         # Feature converts Inputs to Features
         if emb is None:
-            emb = embed.Identity(feature_size)
+            emb = embed.Identity()
         elif isinstance(emb, str):
-            emb = getattr(embed, emb)(feature_size)
+            emb = getattr(embed, emb)()
+        elif isinstance(emb, type) and issubclass(emb, embed.Embedding):
+            emb = emb()
         elif isinstance(emb, embed.Embedding):
             pass
         else:
@@ -40,6 +40,8 @@ class IML(serialize.JSONSerializable):
             interp = interpolate.Smooth()
         elif isinstance(interp, str):
             interp = getattr(interpolate, interp)()
+        elif isinstance(interp, type) and issubclass(interp, interpolate.Interpolate):
+            interp = interp()
         elif isinstance(interp, interpolate.Interpolate):
             pass
         else:
@@ -48,9 +50,16 @@ class IML(serialize.JSONSerializable):
         # Index determines the distance metric and efficiency
         if index is None:
             index = nnsearch.IndexBrute(emb.size)
+        elif isinstance(index, str):
+            index = getattr(nnsearch, index)()
+        elif isinstance(index, type) and issubclass(index, nnsearch.Index):
+            index = index(emb.size)
+        elif isinstance(index, nnsearch.Index):
+            pass
+        else:
+            raise ValueError
         
         super().__init__(
-            feature_size=feature_size, 
             emb=emb, interp=interp, index=index,
             k=k)
 

@@ -14,6 +14,17 @@ class Interpolate(JSONSerializable):
         super().__init__(**kw)
 
     def __call__(self, targets: List[Output], scores: Scores) -> Output:
+        """
+        Args:
+            targets: [k x <batch dims> x <output dims>]
+                first dimension is neighbor dimension
+                trailing dimensions are feature dimensions
+                remaining dimensions are batch dimensions
+            scores: [k]
+
+        Returns:
+            output: [<batch dims> x <output dims>]
+        """
         raise NotImplementedError
 
 class Nearest(Interpolate):
