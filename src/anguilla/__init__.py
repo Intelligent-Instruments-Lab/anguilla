@@ -16,13 +16,13 @@ from .serialize import JSONSerializable
 def issubtype(t1, t2):
     return isinstance(t1, type) and issubclass(t1, t2)
 
-def construct(item, module, parent, default):
+def construct(item, module, parent, default, **kw):
     if item is None:
-        return default()
+        return default(**kw)
     elif isinstance(item, str):
-        return getattr(module, item)()
+        return getattr(module, item)(**kw)
     elif issubtype(item, parent):
-        return item()
+        return item(**kw)
     elif isinstance(item,parent):
         return item
     else:
@@ -35,6 +35,7 @@ class IML(serialize.JSONSerializable):
             embed_output:Union[str,embed.Embedding]=None, 
             interpolate:Union[str,interpolate.Interpolate]=None,
             index:nnsearch.Index=None,
+            k:Optional[int]=None,
             verbose=False):
         """
         Args:
@@ -44,8 +45,8 @@ class IML(serialize.JSONSerializable):
                 (defaults to Identity). must be invertible.
             interp: instance, type or name of Interpolate subclass 
                 (defaults to Smooth)
-            index: instance of Index (defaults to IndexBrute)
-            k: default k-nearest neighbors (can be overridden later)
+            index: instance, type or name of Index subclass 
+                (defaults to IndexFast)
         """
         self.verbose = verbose
         # Feature converts Inputs to Features
