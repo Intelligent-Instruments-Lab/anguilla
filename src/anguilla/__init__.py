@@ -4,11 +4,10 @@ from .types import *
 from . import nnsearch as _nnsearch
 from . import embed as _embed
 from . import interpolate as _interpolate
-from . import serialize as _serialize
-from .nnsearch import Index, IndexBrute
+from . import serialize
+from .nnsearch import Index, IndexFast
 from .embed import Embedding, Identity
 from .interpolate import Interpolate, Smooth
-from .serialize import JSONSerializable
 
 # TODO: state serialization
 # TODO: serialize defaults where possible
@@ -35,7 +34,6 @@ class IML(serialize.JSONSerializable):
             embed_output:Union[str,embed.Embedding]=None, 
             interpolate:Union[str,interpolate.Interpolate]=None,
             index:nnsearch.Index=None,
-            k:Optional[int]=None,
             verbose=False):
         """
         Args:
@@ -57,7 +55,7 @@ class IML(serialize.JSONSerializable):
         self.interpolate = construct(
             interpolate, _interpolate, Interpolate, Smooth)
         self.index = construct(
-            index, _nnsearch, Index, IndexBrute)
+            index, _nnsearch, Index, IndexFast)
         
         super().__init__(
             embed_input=self.embed_input, embed_output=self.embed_output, 
@@ -128,6 +126,7 @@ class IML(serialize.JSONSerializable):
         ids = self.index.add(zs, ws, ids=ids)
 
         for x,y,i in zip(inputs, outputs, ids):
+            i = PairID(i)
             self.pairs[i] = IOPair(x,y)
 
         return ids

@@ -22,6 +22,8 @@ class SearchResult(NamedTuple):
     scores:Scores
 
 def _np_coerce(x):
+    if x is None:
+        return None
     if hasattr(x, 'numpy'):
         return x.numpy()
     else:

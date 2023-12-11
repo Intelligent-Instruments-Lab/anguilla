@@ -64,9 +64,9 @@ def test_nnsearch(d, k, index, metric):
             assert min(scores) == s, "query point should have min score"
 
     # use index.items()
-    print(f'{ids=}')
+    # print(f'{ids=}')
     for i,(pz,pw) in index.items():
-        print(i)
+        # print(i)
         assert any(
             i==j 
             # and np.allclose(pw,qw)
@@ -92,3 +92,11 @@ def test_nnsearch(d, k, index, metric):
     z, _ = index.get(i)
     index.remove_near([z], k=1)
     assert i not in index, "query point should have been removed"
+
+    # replace all points
+    n = len(index)
+    pts = (rng.normal(size=(n, d_in)), rng.normal(size=(n, d_out)))
+    ids = list(index)
+    print(ids)
+    index.add(*pts, ids=ids)
+

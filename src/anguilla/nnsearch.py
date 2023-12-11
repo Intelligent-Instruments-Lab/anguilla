@@ -52,6 +52,9 @@ class Index(JSONSerializable):
     def ids(self):
         raise NotImplementedError
     
+    def __len__(self):
+        return len(self.ids)
+    
     def __iter__(self):
         """iterate over IDs in the index"""
         return iter(self.ids)
@@ -94,8 +97,6 @@ class IndexBrute(Index):
     """
     Optimized for simplicity and flexibility,
     may not scale to large datasets.
-
-    NOTE: currently no batching support.
     """
     def __init__(self, d:Tuple[int, int]=None, metric:Callable=None):
         """
@@ -249,41 +250,31 @@ try:
         def add(self, zs:Feature, ws:Feature, ids:Optional[PairID]=None):
             """add a new feature, return its ID.
             Args:
-                z: the input feature to add
-                w: the output feature to add
-                i: if not supplied, generate new IDs;
-                    otherwise, use the supplied id.
-                    supply an existing id to replace.
+                zs: batch of input features to add
+                ws: batch of output features to add
+                ids: if not supplied, generate new IDs;
+                    otherwise, use the supplied ids.
+                    already existing ids will be replaced.
             """
-            if zs.ndim!=2: raise ValueError(zs.shape)
-            if ws.ndim!=2: raise ValueError(ws.shape)
-            if ids is not None and ids.ndim==1: raise ValueError
+            zs, ws, ids = np_coerce(zs, ws, ids)
+            assert zs.ndim==2, zs.shape
+            assert ws.ndim==2, ws.shape
+            assert ids is None or ids.ndim==1, ids.shape
 
             if self.z_index is None:
                 self.init((zs.shape[-1], ws.shape[-1]))
-            # if z.ndim==1:
-                # assert w.ndim==1
-            #     batch = False
-            #     z = z[None]
-            #     w = w[None]
-            #     if i is not None:
-            #         i = [i]
-            # else:
-            #     batch = True
 
             zs = zs.astype(np.float32)
             ws = ws.astype(np.float32)
 
             if ids is None:
-                # no id supplied case
+                # no ids supplied case
+                # generate new unique ids
                 n = max(self.id_to_idx, default=-1) + 1
                 ids = np.arange(n, n+len(zs))
             else:
-                raise NotImplementedError
-                # separate given ids into new and existing
-                # replace existing in-place if supported,
-                # else remove and insert
-                # add new and create internal ids
+                # remove any existing ids
+                self.remove([i for i in ids if i in self.id_to_idx])
 
             self.z_index.add(zs)
             self.w_index.add(ws)
@@ -291,15 +282,12 @@ try:
             n = self.z_index.ntotal
             idx = np.arange(n - len(zs), n)
 
-            # map external ID to faiss index
+            # map external ID to/from faiss index
             for id_ext, idx_int in zip(ids, idx):
                 self.id_to_idx[id_ext] = idx_int
                 self.idx_to_id[idx_int] = id_ext
 
-            # if batch:
             return ids
-            # else:
-                # return ids[0]
 
         def remove(self, ids:PairIDs):
             """remove points by ID"""
