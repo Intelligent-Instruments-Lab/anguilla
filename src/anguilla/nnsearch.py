@@ -271,7 +271,7 @@ try:
                 # no ids supplied case
                 # generate new unique ids
                 n = max(self.id_to_idx, default=-1) + 1
-                ids = np.arange(n, n+len(zs))
+                ids = range(n, n+len(zs))
             else:
                 # remove any existing ids
                 self.remove([i for i in ids if i in self.id_to_idx])
