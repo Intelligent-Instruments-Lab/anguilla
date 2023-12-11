@@ -1,6 +1,6 @@
 import pytest
 from anguilla import IML
-from anguilla.embed import ProjectAndSort
+from anguilla.embed import ProjectAndSort, Identity
 from anguilla.nnsearch import IndexBrute, IndexFast
 import torch
 
@@ -13,17 +13,19 @@ def test_project_and_sort(index, lazy):
 
     d_src = (src_x,src_y)
     ctrl = torch.rand(d_src)
-    z = torch.zeros(tgt_size)
 
     if lazy:
-        iml = IML(emb=ProjectAndSort, index=index)
+        iml = IML(embed_input=ProjectAndSort, index=index)
     else:
-        iml = IML(emb=ProjectAndSort(d_src), index=index)
+        iml = IML(
+            embed_input=ProjectAndSort(d_src),
+            embed_output=Identity(tgt_size),
+            index=index)
 
     def iml_map():
         while(len(iml.pairs) < 32):
             src = torch.rand(d_src)
-            tgt = z + torch.randn(tgt_size)*2
+            tgt = torch.randn(tgt_size)*2
             iml.add(src, tgt)
     iml_map()
 
@@ -32,6 +34,7 @@ def test_project_and_sort(index, lazy):
     indices = torch.randperm(ctrl.shape[0])
 
     # test invariance to order along batch dimension
+    z = torch.zeros(tgt_size)
     def update_pos():
         indices[:] = torch.randperm(ctrl.shape[0])
         ctrl[:] = ctrl[indices]

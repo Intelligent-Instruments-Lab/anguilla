@@ -12,9 +12,6 @@ Scores = ArrayLike # Scores describe distance between inputs in feature space
 PairID = int # PairIDs associate Inputs (via Features) with Outputs
 PairIDs = ArrayLike
 
-class IDFeaturePair(NamedTuple):
-    id:PairID
-    feature:Feature
 class IOPair(NamedTuple):
     input:Input
     output:Output

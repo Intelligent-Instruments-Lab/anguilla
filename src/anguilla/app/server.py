@@ -29,16 +29,16 @@ def main(
 
     OSC Routes:
 
-        /anguilla/config "emb" "Identity"
-            set embedding to Identity (the default)
-        /anguilla/config "emb" "ProjectAndSort"
-            set embedding to ProjectAndSort
+        /anguilla/config "embed_input" "Identity"
+            set input embedding to Identity (the default)
+        /anguilla/config "embed_input" "ProjectAndSort"
+            set input embedding to ProjectAndSort
 
-        /anguilla/config "interp" "Smooth"
+        /anguilla/config "interpolate" "Smooth"
             set interpolator to Smooth (the default)
-        /anguilla/config "interp" "Softmax"
+        /anguilla/config "interpolate" "Softmax"
             set interpolator to Softmax
-        /anguilla/config "interp" "Ripple"
+        /anguilla/config "interpolate" "Ripple"
             set interpolator to Ripple
 
         /anguilla/add "input" ... "output"... 
@@ -49,6 +49,8 @@ def main(
 
         /anguilla/remove_near "input" ... ["k" k]
             remove k points from the mapping by proximity
+            here you would replace '...' with a series of numbers
+            '[]' denotes optional parts of the message (not OSC lists)
 
         /anguilla/map "input" ... ["k" k] ["ripple" r] ["temp" t]
             map an input to an output using k neighbors
