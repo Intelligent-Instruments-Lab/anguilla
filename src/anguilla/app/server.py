@@ -8,13 +8,14 @@ import anguilla
 from anguilla import IML
 from iipyper import OSC, run
 from iipyper.types import *
-import numpy as np
-from time import time
 from collections import defaultdict
 from typing import Optional
 
 def get_handle(address):
-    return ''.join(address.split('/')[3:]).strip('/')
+    # return ''.join(address.split('/')[3:]).strip('/')
+    s = address.split('/')
+    if len(s) > 2: return s[1]
+    return 'default'
 
 def main(
     osc_port:int=8732,
@@ -44,6 +45,12 @@ def main(
         /anguilla/add "input" ... "output"... 
             add a point to the mapping
 
+        /anguilla/add_batch "input" <json> "output" <json> 
+            add a batch of points to the mapping
+            each <json> is a JSON string: { "shape": [B, D], "data": [...] }
+            where B is the batch size and D is the input dimension,
+            and data is a list of numbers of length B*D.
+
         /anguilla/remove id 
             remove a point from the mapping by ID
 
@@ -56,6 +63,13 @@ def main(
             map an input to an output using k neighbors
             "temp" 1 > t > 0 when using Softmax interpolator
             "ripple" r > 0 when using Ripple interpolator
+            
+        /anguilla/map_batch "input" <json> ["k" k] ["ripple" r] ["temp" t] 
+            add a batch of points to the mapping
+            <json> is a JSON string: { "shape": [B, D], "data": [...] }
+            where B is the batch size and D is the input dimension,
+            and data is a list of numbers of length B*D.
+            the output is returned as JSON in the same format. 
 
         /anguilla/reset
             remove all points
@@ -68,14 +82,18 @@ def main(
             save IML to file at `path`
 
         an additional segment in a route is the name of an IML instance which
-        it will target, e.g. /anguilla/add/myinstance
+        it will target, e.g. /anguilla/myinstance/add
     """
     osc = OSC(osc_host, osc_port)
 
     instances = {}
     configs = defaultdict(dict)
 
-    @osc.handle('/anguilla/config*')
+    @osc.handle
+    def _(address, *a):
+        print(address)
+
+    @osc.handle('/anguilla/*config/')
     def _(address, **kw):
         k = get_handle(address)
 
@@ -84,20 +102,29 @@ def main(
         configs[k].update(kw)
         print(configs[k]) 
 
-    @osc.handle('/anguilla/add*')
+    @osc.handle('/anguilla/*add/', return_port=osc_return_port)
     def _(address, input:Splat[None], output:Splat[None], id:int=None):
         key = get_handle(address)
 
-        # d = len(input)
-        # config['feature_size'] = d
         if key not in instances:
-            # print(f'new IML object with Input dimension {d}')
             print(f'new IML object with handle "{key}" with config {configs[key]}')
             instances[key] = IML(**configs[key])
 
         return '/return'+address, instances[key].add(input, output, id=id)
     
-    @osc.handle('/anguilla/remove*')
+    @osc.handle('/anguilla/*add_batch/', return_port=osc_return_port)
+    def _(address, inputs:NDArray, outputs:NDArray, ids:NDArray=None):
+        key = get_handle(address)
+
+        if key not in instances:
+            print(f'new IML object with handle "{key}" with config {configs[key]}')
+            instances[key] = IML(**configs[key])
+
+        ids = instances[key].add_batch(inputs, outputs, ids=ids)
+
+        return '/return'+address, *ids
+    
+    @osc.handle('/anguilla/*remove/')
     def _(address, id:int):
         key = get_handle(address)
         if key in instances:
@@ -105,7 +132,7 @@ def main(
         else:
             print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
 
-    @osc.handle('/anguilla/remove_near*')
+    @osc.handle('/anguilla/*remove_near')
     def _(address, input:Splat[None], k:int=None):
         key = get_handle(address)
         if key not in instances:
@@ -114,7 +141,7 @@ def main(
         
         instances[key].remove_near(input, k=k)
 
-    @osc.handle('/anguilla/map*', return_port=osc_return_port)
+    @osc.handle('/anguilla/*map/', return_port=osc_return_port)
     def _(address, input:Splat[None], k:int=None, **kw):
         key = get_handle(address)
         if key not in instances:
@@ -122,12 +149,23 @@ def main(
             print(f'ERROR: anguilla: call {address.replace("map", "add")} at least once before {address}')
             return
 
-        # print(f'{kw=}')
         result = instances[key].map(input, k=k, **kw).tolist()
 
         return '/return'+address, *result
     
-    @osc.handle('/anguilla/reset*')
+    @osc.handle('/anguilla/*map_batch/', return_port=osc_return_port)
+    def _(address, inputs:NDArray, k:int=None, **kw):
+        key = get_handle(address)
+        if key not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
+            print(f'ERROR: anguilla: call {address.replace("map", "add")} at least once before {address}')
+            return
+
+        result = ndarray_to_json(instances[key].map_batch(inputs, k=k, **kw))
+
+        return '/return'+address, result
+    
+    @osc.handle('/anguilla/*reset/')
     def _(address, keep_near:Splat[None]=None, k:int=None):
         key = get_handle(address)
         if key not in instances:
@@ -136,7 +174,7 @@ def main(
     
         instances[key].reset(keep_near, k=k)
 
-    @osc.handle('/anguilla/load*')
+    @osc.handle('/anguilla/*load/')
     def _(address, path:str):
         k = get_handle(address)
         
@@ -153,7 +191,7 @@ def main(
             print(f'load IML object at "{k}" from {path}')
             instances[k] = IML.load(path)
 
-    @osc.handle('/anguilla/save*')
+    @osc.handle('/anguilla/*save/')
     def _(address, path:str):
         k = get_handle(address)
         if k!='' and k not in instances:
