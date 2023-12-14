@@ -20,6 +20,7 @@ def main(
     osc_port:int=8732,
     osc_return_port:Optional[int]=None,
     osc_host:str='',
+    verbose=0,
     ):
     """
     Args:
@@ -68,7 +69,7 @@ def main(
         an additional segment in a route is the name of an IML instance which
         it will target, e.g. /anguilla/add/myinstance
     """
-    osc = OSC(osc_host, osc_port)
+    osc = OSC(osc_host, osc_port, verbose=verbose)
 
     instances = {}
     configs = defaultdict(dict)
