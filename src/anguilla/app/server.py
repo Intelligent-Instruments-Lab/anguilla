@@ -14,13 +14,20 @@ from typing import Optional
 def get_handle(address):
     # return ''.join(address.split('/')[3:]).strip('/')
     s = address.split('/')
-    if len(s) > 2: return s[1]
-    return 'default'
+    print(s)
+    assert s[0]==''
+    if len(s)==4: 
+        return s[-2]
+    elif len(s)==3:
+        return 'default'
+    else:
+        raise ValueError(address, s)
 
 def main(
     osc_port:int=8732,
     osc_return_port:Optional[int]=None,
     osc_host:str='',
+    verbose=0,
     ):
     """
     Args:
@@ -28,7 +35,7 @@ def main(
         osc_return_port: if supplied, reply on a different port than osc_port
         osc_host: leave this as empty string to get all traffic on the port
 
-    OSC Routes:
+    OSC Methods:
 
         /anguilla/config "embed_input" "Identity"
             set input embedding to Identity (the default)
@@ -81,10 +88,12 @@ def main(
         /anguilla/save path
             save IML to file at `path`
 
-        an additional segment in a route is the name of an IML instance which
-        it will target, e.g. /anguilla/myinstance/add
+        all of the above methods accept and additional `instance <name>`
+        pair of arguments, where `<name>` refers to an `IML` instance.
+        if not provided, the value of `<name>` is the string "default"
+
     """
-    osc = OSC(osc_host, osc_port)
+    osc = OSC(osc_host, osc_port, verbose=verbose)
 
     instances = {}
     configs = defaultdict(dict)
@@ -93,18 +102,19 @@ def main(
     def _(address, *a):
         print(address)
 
-    @osc.handle('/anguilla/*config/')
-    def _(address, **kw):
-        k = get_handle(address)
-
-        print(k)
+    @osc.kwargs('/anguilla/config')
+    def _(address, instance='default', **kw):
+        # print(k)
         # TODO: validate input
-        configs[k].update(kw)
-        print(configs[k]) 
+        configs[instance].update(kw)
+        if verbose > 0:
+            print(f'{configs=}') 
 
-    @osc.handle('/anguilla/*add/', return_port=osc_return_port)
-    def _(address, input:Splat[None], output:Splat[None], id:int=None):
-        key = get_handle(address)
+    @osc.handle('/anguilla/add', return_port=osc_return_port)
+    def _(address, 
+            input:Splat[None], output:Splat[None], id:int=None, 
+            instance='default'):
+        key = instance
 
         if key not in instances:
             print(f'new IML object with handle "{key}" with config {configs[key]}')
@@ -112,9 +122,11 @@ def main(
 
         return '/return'+address, instances[key].add(input, output, id=id)
     
-    @osc.handle('/anguilla/*add_batch/', return_port=osc_return_port)
-    def _(address, inputs:NDArray, outputs:NDArray, ids:NDArray=None):
-        key = get_handle(address)
+    @osc.handle('/anguilla/add_batch', return_port=osc_return_port)
+    def _(address, 
+            inputs:NDArray, outputs:NDArray, ids:NDArray=None, 
+            instance='default',):
+        key = instance
 
         if key not in instances:
             print(f'new IML object with handle "{key}" with config {configs[key]}')
@@ -124,26 +136,26 @@ def main(
 
         return '/return'+address, *ids
     
-    @osc.handle('/anguilla/*remove/')
-    def _(address, id:int):
-        key = get_handle(address)
+    @osc.handle('/anguilla/remove')
+    def _(address, id:int, instance='default'):
+        key = instance
         if key in instances:
             instances[key].remove(id)
         else:
             print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
 
-    @osc.handle('/anguilla/*remove_near')
-    def _(address, input:Splat[None], k:int=None):
-        key = get_handle(address)
+    @osc.handle('/anguilla/remove_near')
+    def _(address, input:Splat[None], k:int=None, instance='default'):
+        key = instance
         if key not in instances:
             print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
             return
         
         instances[key].remove_near(input, k=k)
 
-    @osc.handle('/anguilla/*map/', return_port=osc_return_port)
-    def _(address, input:Splat[None], k:int=None, **kw):
-        key = get_handle(address)
+    @osc.handle('/anguilla/map', return_port=osc_return_port)
+    def _(address, input:Splat[None], k:int=None, instance='default', **kw):
+        key = instance
         if key not in instances:
             print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
             print(f'ERROR: anguilla: call {address.replace("map", "add")} at least once before {address}')
@@ -153,9 +165,9 @@ def main(
 
         return '/return'+address, *result
     
-    @osc.handle('/anguilla/*map_batch/', return_port=osc_return_port)
-    def _(address, inputs:NDArray, k:int=None, **kw):
-        key = get_handle(address)
+    @osc.handle('/anguilla/map_batch', return_port=osc_return_port)
+    def _(address, inputs:NDArray, k:int=None, instance='default', **kw):
+        key = instance
         if key not in instances:
             print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
             print(f'ERROR: anguilla: call {address.replace("map", "add")} at least once before {address}')
@@ -165,48 +177,48 @@ def main(
 
         return '/return'+address, result
     
-    @osc.handle('/anguilla/*reset/')
-    def _(address, keep_near:Splat[None]=None, k:int=None):
-        key = get_handle(address)
+    @osc.handle('/anguilla/reset')
+    def _(address, keep_near:Splat[None]=None, k:int=None, instance='default'):
+        key = instance
         if key not in instances:
             print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
             return
     
         instances[key].reset(keep_near, k=k)
 
-    @osc.handle('/anguilla/*load/')
-    def _(address, path:str):
-        k = get_handle(address)
+    @osc.handle('/anguilla/load')
+    def _(address, path:str, instance=None):
+        key = instance
         
         assert path.endswith('.json'), \
-            "ERROR: anguilla: path should end with .json"
+            f"ERROR: anguilla {address}: path should end with .json"
         
-        if k=='':
+        if key is None:
             print(f'loading all IML objects from {path}')
             d = anguilla.serialize.load(path)
             assert isinstance(d, dict)
             print(f'found IML instances: {list(d.keys())}')
             instances.update(d)
         else:
-            print(f'load IML object at "{k}" from {path}')
-            instances[k] = IML.load(path)
+            print(f'load IML object at "{key}" from {path}')
+            instances[key] = IML.load(path)
 
-    @osc.handle('/anguilla/*save/')
-    def _(address, path:str):
-        k = get_handle(address)
-        if k!='' and k not in instances:
-            print(f'ERROR: anguilla: {address}: no instance "{k}" exists')
+    @osc.handle('/anguilla/save')
+    def _(address, path:str, instance=None):
+        key = instance
+        if key is not None and key not in instances:
+            print(f'ERROR: anguilla: {address}: no instance "{key}" exists')
             return
         
         assert path.endswith('.json'), \
-            "ERROR: anguilla: path should end with .json"
+            f"ERROR: anguilla {address}: path should end with .json"
         
-        if k=='':
+        if key is None:
             print(f'saving all IML objects to {path}')
             anguilla.serialize.save(path, instances)
         else:
-            print(f'saving IML object at "{k}" to {path}')
-            instances[k].save(path)
+            print(f'saving IML object at "{key}" to {path}')
+            instances[key].save(path)
 
 if __name__=='__main__':
     run(main)

@@ -80,7 +80,6 @@ class Index(JSONSerializable):
             k: number of nearest neighbors to each query point to remove
                 (defaults to index default k)
         """
-        # TODO: fast version for IndexFast
         zs, = np_coerce(zs)
         assert zs.ndim==2, zs.shape
 
@@ -292,7 +291,12 @@ try:
         def remove(self, ids:PairIDs):
             """remove points by ID"""
             # TODO: batch remove
+            removed_ids = []
             for i in ids:
+                if i not in self.id_to_idx:
+                    print(f'WARNING: anguilla: no point with ID {i} in index')
+                    continue
+                removed_ids.append(i)
                 idx = self.id_to_idx[i]
                 del self.id_to_idx[i]
                 del self.idx_to_id[idx]
@@ -304,6 +308,7 @@ try:
                     k:(v-1 if v > idx else v) for k,v in self.id_to_idx.items()}
                 self.idx_to_id = {
                     (k-1 if k > idx else k):v for k,v in self.idx_to_id.items()}
+            return removed_ids
         
         def get(self, i:PairID) -> Tuple[Feature, Feature]:
             """get a feature pair by ID"""

@@ -192,17 +192,13 @@ class IML(serialize.JSONSerializable):
 
         self.index.remove(ids)
 
-    def remove_near(self, input:Input, k:int=None) -> PairIDs:
+    def remove_near(self, input:Input, k:int=None, batch=False) -> PairIDs:
         """
         Remove from mapping by proximity to Input.
         """
-        z = self.embed(input)
-        if z.ndim==1:
-            zs = z[None]
-        elif z.ndim==2:
-            zs = z
-        else:
-            raise ValueError(z.shape)
+        if not batch:
+            input = (input,)
+        zs = self.embed_batch(self.embed_input, input)
         ids = self.index.remove_near(zs, k=k)
         for i in ids:
             del self.pairs[i]
