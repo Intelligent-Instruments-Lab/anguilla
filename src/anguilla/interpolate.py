@@ -67,21 +67,23 @@ class Softmax(Interpolate):
     def __init__(self):
         super().__init__()
 
-    def __call__(self, targets:List[Output], scores:List[float], temp:float=0.5):
+    def __call__(self, targets:List[Output], scores:List[float], temp:float=0.25):
         """
         Args:
             targets: size [K x ...batch dims... x ...output_dims...] 
             scores: size [K x ...batch dims...] 
             temp: temperature of softmax
         """
+        scores = scores**0.5
+
         targets, scores = np_coerce(targets, scores)
         # print(targets.shape, scores.shape)
 
         if temp==0:
             result = Nearest()(targets, scores)
         else:
-            centered = scores - np.mean(scores, 0) # for numerical precision
-            logits = np.maximum(-centered/temp, -20)
+            centered = scores - np.min(scores, 0) # for numerical precision
+            logits = np.maximum(-centered/temp, -30)
             # print(f'{logits=}')
             weights = np.exp(logits)
             # print(f'{weights=}')
@@ -123,6 +125,8 @@ class Smooth(Interpolate):
         
         targets, scores = np_coerce(targets, scores)
 
+        scores = scores**0.5
+
         scores = scores + eps
         assert np.min(scores) > 0
 
@@ -131,9 +135,11 @@ class Smooth(Interpolate):
         # zero first/second derivative at largest score
         mx = np.max(scores, 0)
         # weights = 1/scores + (-3*mx*mx + 3*mx*scores - scores*scores)/(mx**3)
-        weights = 1/scores + (3*mx*(scores-mx) - scores*scores)/(mx**3)
+        # weights = 1/scores + (-3*mx*mx + (3*mx - scores)*scores)/(mx**3)
+        s_m = scores/mx
+        weights = 1/scores + ((3-s_m)*s_m - 3)/mx 
 
-        weights = weights + eps
+        weights = weights + eps/mx
         weights = weights / weights.sum(0)
 
         result = np.transpose((
@@ -168,6 +174,8 @@ class Ripple(Interpolate):
         
         targets, scores = np_coerce(targets, scores)
 
+        scores = scores**0.5
+
         scores = scores + eps
         assert np.min(scores) > 0
 
@@ -175,14 +183,15 @@ class Ripple(Interpolate):
         # zero score -> inf weight
         mx = np.max(scores, 0)
         # weights = 1/scores + (-3*mx*mx + 3*mx*scores - scores*scores)/(mx**3)
-        weights = 1/scores + (3*mx*(scores-mx) - scores*scores)/(mx**3)
+        s_m = scores/mx
+        weights = 1/scores + ((3-s_m)*s_m - 3)/mx 
 
         weights = weights * 2**(
             ripple_depth * 
-            (1+np.cos(np.pi*scores/mx)*np.sin(scores*np.pi*ripple))
+            (1+np.cos(2*np.pi/mx*scores)*np.sin(2*np.pi*ripple*scores))
             )
 
-        weights = weights + eps
+        weights = weights + eps/mx
         weights = weights / weights.sum(0)
 
         # result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
