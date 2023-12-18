@@ -27,9 +27,12 @@ class Interpolate(JSONSerializable):
         """
         raise NotImplementedError
 
-# NOTE: may be better to use Mean and call map with k=1
 class Nearest(Interpolate):
-    """return nearest neighbor (voronoi cell mapping)"""
+    """
+    return nearest neighbor (voronoi cell mapping)
+    
+    NOTE: preferable to use `Mean` with `k=1` in most cases.
+    """
     def __init__(self):
         super().__init__()
 
@@ -40,11 +43,6 @@ class Nearest(Interpolate):
         r = np.take_along_axis(targets, idx, 0)[0]
         # print(f'{r.shape=}')
         return r
-
-        # if idx.ndim > 1:
-            # return [targets[i,j] for j,i in enumerate(idx)]
-        # else:
-            # return targets[idx]
 
 class Mean(Interpolate):
     """mean of neighbors (piecewise constant mapping)"""
@@ -63,6 +61,9 @@ class Softmax(Interpolate):
     -> tends to get 'washed out' for larger `k` / larger temp
 
     when temp is small, acts more like `Nearest` (voronoi cells).
+
+    Scale-equivariant; the scale of inputs interacts with the `temp` parameter. 
+    If input data is scaled by a factor `s`, scale `temp` by `s` to compensate.
     """
     def __init__(self):
         super().__init__()
@@ -108,7 +109,10 @@ class Smooth(Interpolate):
     Only works for `k > 2`, and generally works well with larger `k`.
     out-of-domain input areas tend to be averages of many outputs.
 
-    Equivalent to `Nearest` if used with `k < 3`
+    Equivalent to `Nearest` if used with `k < 3`.
+
+    Scale-invariant, should work the same if inputs are rescaled.
+    (still recommended to keep inputs roughly normalized for numerical stability)
     """
     def __init__(self):
         super().__init__()
@@ -154,6 +158,9 @@ class Ripple(Interpolate):
     useful for making random mappings in high dimensional spaces / bootstrapping expressive mappings from a few points.
 
     Equivalent to `Nearest` if used with `k < 3`
+
+    Scale-equivariant; the scale of inputs interacts with the `ripple` frequency. 
+    If input data is scaled by a factor `s`, scale `ripple` by `1/s` to compensate.
     """
     def __init__(self):
         super().__init__()
