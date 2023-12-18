@@ -90,14 +90,8 @@ class Softmax(Interpolate):
             # print(f'{weights=}')
             weights /= weights.sum(0)
             # print(f'{weights=}')
-            # result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
             result = np.transpose((
                 np.transpose(targets)*np.transpose(weights)).sum(-1))
-            
-            # 
-            # print(f'{logits.shape=}')
-            # do_nearest = np.max(np.abs(logits), 0, keepdims=True) > 80
-            # result = np.where(do_nearest, Nearest()(targets, scores), result)
         # print(f'{result=}')
         return result
 
@@ -201,7 +195,6 @@ class Ripple(Interpolate):
         weights = weights + eps/mx
         weights = weights / weights.sum(0)
 
-        # result = (np.moveaxis(targets,0,-1)*weights).sum(-1)
         result = np.transpose((
             np.transpose(targets)*np.transpose(weights)).sum(-1))
 
