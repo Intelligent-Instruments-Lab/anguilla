@@ -12,6 +12,10 @@ class Embedding(JSONSerializable):
 
     def __call__(self, source: Input) -> Feature:
         raise NotImplementedError
+    
+    def inv(self, target: Feature) -> Input:
+        raise NotImplementedError
+
 
 class Identity(Embedding):
     """
@@ -29,6 +33,7 @@ class Identity(Embedding):
         super().__init__(size=size)
         self.size = self.input_size = size
         self.is_batched = True
+        # self.in_type = lambda x:x
 
     def __call__(self, source) -> ArrayLike:
         """
@@ -40,10 +45,21 @@ class Identity(Embedding):
         Returns:
             feature: the input sequence as a numpy array.
         """
+        # self.in_type = type(source)
+
         source, = np_coerce(source)
+
         if self.size is not None:
-            assert source.shape[-len(self.size):] == self.size, (source.shape, self.size)
+            if isinstance(self.size, int):
+                assert source.shape[-1] == self.size, (source.shape, self.size)
+            else:
+                assert source.shape[-len(self.size):] == self.size, (source.shape, self.size)
         return source
+    
+    def inv(self, w):
+        # print(self.in_type, type(w), w.shape)
+        # w = self.in_type(w)
+        return w
     
 # Random, RandomNormal embedding,
 # item is hashed and used to sample a distribution
