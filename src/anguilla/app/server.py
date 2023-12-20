@@ -27,7 +27,7 @@ def main(
     osc_port:int=8732,
     osc_return_port:Optional[int]=None,
     osc_host:str='',
-    verbose=0,
+    verbose=1,
     ):
     """
     Args:
