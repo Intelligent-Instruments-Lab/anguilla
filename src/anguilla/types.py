@@ -12,9 +12,6 @@ Scores = ArrayLike # Scores describe distance between inputs in feature space
 PairID = int # PairIDs associate Inputs (via Features) with Outputs
 PairIDs = ArrayLike
 
-class IDFeaturePair(NamedTuple):
-    id:PairID
-    feature:Feature
 class IOPair(NamedTuple):
     input:Input
     output:Output
@@ -25,6 +22,8 @@ class SearchResult(NamedTuple):
     scores:Scores
 
 def _np_coerce(x):
+    if x is None:
+        return None
     if hasattr(x, 'numpy'):
         return x.numpy()
     else:

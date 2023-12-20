@@ -10,11 +10,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 numpy = "^1.23"
-faiss-cpu = {version = "^1.7", optional = true}
+faiss-cpu = "^1.7"
 iipyper = "0.1.*"
-
-[tool.poetry.extras]
-faiss = ["faiss-cpu"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
