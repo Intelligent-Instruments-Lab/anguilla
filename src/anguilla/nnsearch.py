@@ -290,7 +290,6 @@ try:
 
         def remove(self, ids:PairIDs):
             """remove points by ID"""
-            # TODO: batch remove
             removed_ids = []
             for i in ids:
                 if i not in self.id_to_idx:
