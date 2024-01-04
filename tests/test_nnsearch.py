@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from anguilla.nnsearch import *
 
-@pytest.mark.parametrize('index', [IndexNumpy, IndexBrute, IndexFast])
+@pytest.mark.parametrize('index', [IndexConvex, IndexNumpy, IndexBrute, IndexFast])
 @pytest.mark.parametrize('metric', [sqL2])
 @pytest.mark.parametrize('d', [None,(1,1),(2,2),(98,99)])
 @pytest.mark.parametrize('k', [1,2,5,100])

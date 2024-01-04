@@ -339,6 +339,81 @@ class IndexNumpy(Index):
     def ids(self):
         return self.idx_to_id[:self.n]
 
+class IndexConvex(IndexNumpy):
+    """convex nearest neighbors.
+     
+    once a neighbor is selected, exclude any points on the other side of a plane passing through the neigbor and orthogonal to the line between query and neighbor. 
+
+    problem: how to batch this? different numbers of neighbors are possible...
+        could set values to 0s and scores to inf,
+        but Interpolate would have to handle that with added complexity...
+
+    a soft version which would always return min(N,K) neighbors would work
+    or a hybrid version which prefers the legal points but includes the closest
+    illegal points to get up to K.
+    the former would probably be simpler to implement and vectorize --
+    but asymptotically more costly?
+    """
+    def search(self, z:List[Feature], k:int=None, 
+            return_inputs=True,
+            return_outputs=True, 
+            return_ids=True) -> SearchResult:
+        """
+        Args:
+            z: batch x feature
+        Returns:
+            zs: [batch, k, input feature]
+            ws: [batch, k, output feature]
+            ids: [batch, k]
+            scores: [batch, k]
+        """
+        k = min(self.n, k or self.default_k)
+        z, = np_coerce(z)
+
+        # compute distances 
+        data = self.z_data[:self.n] #[n, feat]
+        if isinstance(self.metric, sqL2):
+            scores = cdist(z, data, metric='sqeuclidean')
+        else:
+            scores = self.metric(z[:,None,:], data) # [batch, n]
+
+        idx = np.empty((scores.shape[0], k), np.int32)
+        mod_scores = np.copy(scores)
+
+        for i in range(k):
+            # find argmin
+            nbr_idx = np.nanargmin(mod_scores, 1) # batch
+            idx[:,i] = nbr_idx
+
+            if i<k-1:
+                # compute scores penalty
+                nbr = self.z_data[nbr_idx] # batch, feat
+                query_to_nbr = (nbr - z)[:,None,:] # batch, 1, feat
+                nbr_to_data = data - nbr[:,None,:] # batch, n, feat
+                test = (
+                    np.sum(query_to_nbr*nbr_to_data, axis=-1) 
+                    / np.linalg.norm(query_to_nbr, axis=-1)
+                    / np.linalg.norm(nbr_to_data, axis=-1)
+                )
+                # print(test)
+                # mod_scores *= (np.maximum(test, 0) + 1)
+                # mod_scores *= (np.maximum(test, 0)*100 + 1)
+                # mod_scores += np.maximum(test, 0)
+                mod_scores *= 2**test
+                # mod_scores[:,nbr_idx] = np.inf
+                # print(mod_scores.shape, nbr_idx.shape)
+                np.put_along_axis(mod_scores, nbr_idx[:,None], np.inf, 1)
+                # clamped dot product, +inf for the argmin
+
+        scores = np.take_along_axis(scores, idx, axis=1)
+        zs = self.z_data[idx] if return_inputs else None
+        ws = self.w_data[idx] if return_outputs else None
+        ids = self.idx_to_id[idx] if return_ids else None
+        # print(idx.shape, scores.shape, self.z_data.shape, self.idx_to_id.shape)
+        # print(zs.shape, ws.shape, ids.shape)
+
+        return SearchResult(zs, ws, ids, scores)
+
 try:
     import faiss
     from faiss import IndexFlatL2
