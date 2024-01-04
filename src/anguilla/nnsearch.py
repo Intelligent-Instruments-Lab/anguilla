@@ -8,6 +8,7 @@ import itertools as it
 import numpy as np
 from .types import *    
 from .serialize import JSONSerializable
+from scipy.spatial.distance import cdist
 
 class Metric(JSONSerializable):
     """
@@ -196,6 +197,148 @@ class IndexBrute(Index):
     def ids(self):
         return self.z_data.keys()
     
+class IndexNumpy(Index):
+    """
+    """
+    def __init__(self, 
+            d:Optional[Tuple[int,int]]=None, 
+            metric:Callable=None, 
+            k=10, 
+            max_n:int=10000, 
+            **kw):
+        if metric is None:
+            metric = sqL2()
+        super().__init__(d=d, metric=metric, max_n=max_n, k=k, **kw)
+        self.max_n = max_n
+        self.metric = metric
+        self.needs_init = True
+        if d is not None:
+            self.init(d)
+
+    def init(self, d):
+        d_in, d_out = d
+        # index maps id to internal index
+        self.id_to_idx = np.empty(self.max_n, dtype=np.int32)
+        self.idx_to_id = np.empty(self.max_n, dtype=np.int32)
+        self.z_data = np.empty((self.max_n, d_in), dtype=np.float32)
+        self.w_data = np.empty((self.max_n, d_out), dtype=np.float32)
+        self.needs_init = False
+        self.reset()
+
+    def add(self, 
+            zs:List[Feature], 
+            ws:List[Feature], 
+            ids:Optional[List[PairID]]=None
+        ) -> List[PairID]:
+        if self.needs_init:
+            self.init((zs.shape[-1], ws.shape[-1]))
+
+        if ids is None:
+            ids = idx = np.arange(self.n, self.n+len(zs))
+            self.n += len(zs)
+        else:
+            # ids which are present are mapped to idx
+            # other ids are new idx
+            idx = self.id_to_idx[ids]
+            id_missing = idx==-1
+            n_missing = np.count_nonzero(id_missing)
+            if n_missing > 0:
+                idx[id_missing] = np.arange(self.n, self.n+n_missing)
+                self.n += n_missing
+
+        if self.n >= self.max_n:
+            print('WARNING: anguilla: IndexConvex full')
+            return []
+        
+        self.id_to_idx[ids] = idx
+        self.idx_to_id[idx] = ids
+        self.z_data[idx] = zs
+        self.w_data[idx] = ws
+
+        return ids
+    
+    def remove(self, ids:List[PairID]) -> List[PairID]:
+        print(ids)
+        print(self.id_to_idx)
+        for i in ids:
+            idx = self.id_to_idx[i]
+            last_idx = self.n-1
+            if idx == -1:
+                raise ValueError
+            elif idx > last_idx:
+                raise ValueError
+            elif idx < last_idx:
+                # move the last item into place of removed item
+                j = self.idx_to_id[last_idx]
+                self.id_to_idx[j] = idx
+                self.idx_to_id[idx] = j
+                self.z_data[idx] = self.z_data[last_idx]
+                self.w_data[idx] = self.w_data[last_idx]
+            self.n -= 1
+            self.idx_to_id[last_idx] = -1
+            self.id_to_idx[i] = -1
+                
+        return ids
+    
+    def get(self, ids:PairID) -> IOPair:
+        """not batched (mainly for testing purposes)"""
+        if self.needs_init:
+            print(f'WARNING: anguilla: uninitialized index')
+            return None
+        idx = self.id_to_idx[ids]
+        if idx==-1:
+            print(f'WARNING: anguilla: no point with ID {ids} in index')
+            return None
+        return IOPair(self.z_data[idx], self.w_data[idx])
+    
+    def search(self, z:List[Feature], k:int=None, 
+            return_inputs=True,
+            return_outputs=True, 
+            return_ids=True) -> SearchResult:
+        """
+        Args:
+            z: batch x feature
+        Returns:
+            zs: [batch, k, input feature]
+            ws: [batch, k, output feature]
+            ids: [batch, k]
+            scores: [batch, k]
+        """
+        k = k or self.default_k
+        z, = np_coerce(z)
+        # compute distances 
+        data = self.z_data[:self.n]
+        if isinstance(self.metric, sqL2):
+            scores = cdist(z, data, metric='sqeuclidean')
+        else:
+            scores = self.metric(z[:,None,:], data) # [batch, n]
+
+        # idx = np.argsort(scores, axis=1)[:,:k] # [batch, min(n,k)]
+        if self.n <= k:
+            idx = np.arange(self.n)[None]
+        else:
+            idx = np.argpartition(scores, k, axis=1)[:,:k] # [batch, min(n,k)]
+        # print(data.shape)
+
+        scores = np.take_along_axis(scores, idx, axis=1)
+        zs = self.z_data[idx] if return_inputs else None
+        ws = self.w_data[idx] if return_outputs else None
+        ids = self.idx_to_id[idx] if return_ids else None
+        # print(idx.shape, scores.shape, self.z_data.shape, self.idx_to_id.shape)
+        # print(zs.shape, ws.shape, ids.shape)
+
+        return SearchResult(zs, ws, ids, scores)
+    
+    def reset(self):
+        self.n = 0
+        if not self.needs_init:
+            self.id_to_idx[:] = -1
+            self.idx_to_id[:] = -1
+    
+    @property
+    def ids(self):
+        return self.idx_to_id[:self.n]
+
 try:
     import faiss
     from faiss import IndexFlatL2

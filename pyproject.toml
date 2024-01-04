@@ -11,6 +11,7 @@ python = ">=3.10,<3.13"
 numpy = "^1.23"
 faiss-cpu = "^1.7"
 iipyper = {path = "../iipyper", develop = true}
+scipy = "^1.11.4"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
