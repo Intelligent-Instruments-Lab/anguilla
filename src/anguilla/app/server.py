@@ -95,6 +95,9 @@ def main(
     """
     osc = OSC(osc_host, osc_port, verbose=verbose)
 
+    if verbose:
+        print(main.__doc__)
+
     instances = {}
     configs = defaultdict(dict)
 
@@ -110,6 +113,76 @@ def main(
         if verbose > 0:
             print(f'{configs=}') 
 
+    ##### prototype
+    @osc.handle('/anguilla/seq_input', return_port=osc_return_port)
+    def _(address, 
+            input:Splat[None],
+            instance='default'):
+        key = instance
+
+        if key not in instances:
+            print(f'new IML object with handle "{key}" with config {configs[key]}')
+            instances[key] = IML(**configs[key])
+
+        iml = instances[key]
+        if not hasattr(iml, 'in_buffer'):
+            iml.in_buffer = []
+
+        iml.in_buffer.append(input)
+
+    @osc.handle('/anguilla/seq_output', return_port=osc_return_port)
+    def _(address, 
+            output:Splat[None],
+            instance='default'):
+        key = instance
+
+        if key not in instances:
+            print(f'new IML object with handle "{key}" with config {configs[key]}')
+            instances[key] = IML(**configs[key])
+
+        iml = instances[key]
+        if not hasattr(iml, 'out_buffer'):
+            iml.out_buffer = []
+
+        iml.out_buffer.append(output)
+
+    @osc.handle('/anguilla/seq_end', return_port=osc_return_port)
+    def _(address, n=100, instance='default'):
+        key = instance
+
+        if key not in instances:
+            print(f'new IML object with handle "{key}" with config {configs[key]}')
+            instances[key] = IML(**configs[key])
+
+        iml = instances[key]
+
+        from  scipy.interpolate import CubicSpline
+
+        coords = np.linspace(0,1,n)
+
+        print(f"{len(iml.in_buffer)=} {len(iml.out_buffer)=}")
+
+        inputs = CubicSpline(
+            np.linspace(0,1,len(iml.in_buffer)), 
+            np.array(iml.in_buffer)
+            )(coords)
+        
+        outputs = CubicSpline(
+            np.linspace(0,1,len(iml.out_buffer)), 
+            np.array(iml.out_buffer)
+            )(coords)
+        
+        print(f'{inputs.shape=} {outputs.shape=}')
+        
+        ids = iml.add_batch(inputs, outputs)
+
+        iml.in_buffer = []
+        iml.out_buffer = []
+
+        return '/return'+address, instance, ids
+
+    
+
     @osc.handle('/anguilla/add', return_port=osc_return_port)
     def _(address, 
             input:Splat[None], output:Splat[None], id:int=None, 
@@ -121,7 +194,7 @@ def main(
             instances[key] = IML(**configs[key])
 
         return '/return'+address, instances[key].add(input, output, id=id)
-    
+     
     @osc.handle('/anguilla/add_batch', return_port=osc_return_port)
     def _(address, 
             inputs:NDArray, outputs:NDArray, ids:NDArray=None, 
@@ -163,7 +236,7 @@ def main(
 
         result = instances[key].map(input, k=k, **kw).tolist()
 
-        return '/return'+address, *result
+        return '/return'+address, instance, *result
     
     @osc.handle('/anguilla/map_batch', return_port=osc_return_port)
     def _(address, inputs:NDArray, k:int=None, instance='default', **kw):
@@ -175,7 +248,7 @@ def main(
 
         result = ndarray_to_json(instances[key].map_batch(inputs, k=k, **kw))
 
-        return '/return'+address, result
+        return '/return'+address, instance, result
     
     @osc.handle('/anguilla/reset')
     def _(address, keep_near:Splat[None]=None, k:int=None, instance='default'):

@@ -1,6 +1,7 @@
 import itertools as it
 
 from .types import *
+
 from . import nnsearch as _nnsearch
 from . import embed as _embed
 from . import interpolate as _interpolate
@@ -9,8 +10,8 @@ from .nnsearch import Index, IndexFast
 from .embed import Embedding, Identity
 from .interpolate import Interpolate, Smooth
 
-# TODO: state serialization
-# TODO: serialize defaults where possible
+# # # TODO: state serialization
+# # # TODO: serialize defaults where possible
 
 def issubtype(t1, t2):
     return isinstance(t1, type) and issubclass(t1, t2)
@@ -28,7 +29,6 @@ def construct(item, module, parent, default, **kw):
         raise ValueError
 
 class IML(serialize.JSONSerializable):
-
     def __init__(self, 
             embed_input:Union[str,embed.Embedding]=None, 
             embed_output:Union[str,embed.Embedding]=None, 
