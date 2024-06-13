@@ -3,8 +3,13 @@ import io
 import base64
 from typing import Any
 from copy import deepcopy
+from datetime import datetime
 
 import numpy as np
+
+from packaging.version import Version
+import importlib.metadata
+version = importlib.metadata.version('anguilla')
 
 class JSONSerializable:
     """JSON serialization for Python classes.
@@ -42,6 +47,7 @@ def torch_serializable(o):
     if o.__class__.__module__=='torch':
         return True
     
+    # this should catch specializations of torch tensor outside the torch module
     try:
         import torch
         if isinstance(o, torch.Tensor):
@@ -51,14 +57,14 @@ def torch_serializable(o):
 
     return False
 
-def np_serializable(o):
-    if o.__class__.__module__=='numpy':
-        return True
+# def np_serializable(o):
+#     if o.__class__.__module__=='numpy':
+#         return True
     
-    if isinstance(o, np.array):
-        return True
+#     if isinstance(o, np.array):
+#         return True
     
-    return False
+#     return False
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o: Any) -> Any:
@@ -68,21 +74,22 @@ class JSONEncoder(json.JSONEncoder):
         elif isinstance(o, type):
             # type 
             return {'__type__':'.'.join((o.__module__, o.__name__))}
-        elif torch_serializable(o) or np_serializable(o):
-            # try to serialize with numpy or torch + base85
-            buf = io.BytesIO()
-
-            if torch_serializable(o):
-                import torch
-                torch.save(buf, o)
-                k = '__pt__'
-            else:
-                np.save(buf, o)
-                k = '__npy__'
-            return {k:base64.b85encode(buf.getvalue())}
-        
         else:
-            return super().default(o)
+            # try vanilla JSON serialization
+            try:
+                return super().default(o)
+            except TypeError:
+                # try torch or numpy binary serialization + base85
+                buf = io.BytesIO()
+                if torch_serializable(o):
+                    import torch
+                    torch.save(buf, o)
+                    return {'__pt__':base64.b85encode(buf.getvalue())}
+                # elif np_serializable(o):
+                np.save(buf, o)
+                return {'__npy__':base64.b85encode(buf.getvalue())}
+                # else:
+                    # raise
         
 class JSONDecoder(json.JSONDecoder):
     def __init__(self, *args, **kwargs):
@@ -144,8 +151,28 @@ def get_cls(s):
     
 def load(path):
     with open(path, 'r') as f:
-        return json.load(f, cls=JSONDecoder)        
+        obj = json.load(f, cls=JSONDecoder)
+        print('WARNING: loading saved file from a very old anguilla/iml version')
+
+    if '__body__' in obj:
+        # do stuff with metadata
+        meta = obj['__meta__']
+        obj = obj['__body__']
+        if Version(version) < Version(meta['__version__']):
+            print('WARNING: loading saved file from a previous anguilla version')
+            # backard compat logic goes here
+        elif Version(version) > Version(meta['__version__']):
+            print('WARNING: loading saved file from a future anguilla version')
+    
+    return obj
     
 def save(path, obj):
+    obj = {
+        '__meta__': {
+            '__version__': version,
+            '__date__': datetime.now()
+        },
+        '__body__': obj
+    }
     with open(path, 'w') as f:
         return json.dump(obj, f, cls=JSONEncoder)

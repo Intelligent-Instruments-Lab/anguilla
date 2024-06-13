@@ -10,6 +10,9 @@ from .nnsearch import Index, IndexFast
 from .embed import Embedding, Identity
 from .interpolate import Interpolate, Smooth
 
+import importlib.metadata
+__version__ = importlib.metadata.version('anguilla')
+
 # # # TODO: state serialization
 # # # TODO: serialize defaults where possible
 
