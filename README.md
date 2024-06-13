@@ -1,4 +1,4 @@
-# anguilla
+# anguilla ([Documentation](https://intelligent-instruments-lab.github.io/anguilla/))
 
 `anguilla` is a mapping and interactive machine learning package for digital musical instrument design in Python.
 
@@ -10,16 +10,16 @@ This is an early stage project. Currently, the main interface is the `IML` class
 * an `NNSearch` implements nearest-neighbor search in the feature space
 * an `Interpolate` combines a set of output points using the distances of their corresponding input points from a neighboring query point.
 
-`python -m anguilla server` will expose the Python API over [Open Sound Control](https://en.wikipedia.org/wiki/Open_Sound_Control) (OSC) using [iipyper](https://github.com/intelligent-instruments-lab/iipyper).
+`anguilla server` will expose the Python API over [Open Sound Control](https://en.wikipedia.org/wiki/Open_Sound_Control) (OSC) using [iipyper](https://github.com/intelligent-instruments-lab/iipyper).
 
 For examples and tutorials of how to use `anguilla`, see our [examples repo](https://github.com/intelligent-instruments-lab/iil-examples) (TBC).
 
 ## Install
 
-`anguilla` can be installed via [PyPI](https://pypi.org/project/anguilla):
+`anguilla` can be installed from [PyPI](https://pypi.org/project/anguilla-iml):
 
 ```sh
-pip install anguilla
+pip install anguilla-iml
 ```
 
 ## Develop

@@ -10,7 +10,7 @@ def help():
         server: run the anguilla OSC server
     """)
 
-if __name__=='__main__':
+def _main():
     # print(sys.argv)
     try:
         if sys.argv[1] == 'server':
@@ -20,3 +20,6 @@ if __name__=='__main__':
             help()
     except IndexError:
         help()
+
+if __name__=='__main__':
+    _main()

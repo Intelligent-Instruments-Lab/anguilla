@@ -349,6 +349,7 @@ try:
 
             # nearest neighbor search
             scores, idxs = self.z_index.search(z, k)
+            # print(idxs)
 
             # remove -1 ids
             # assuming pattern of missing is same across batch
