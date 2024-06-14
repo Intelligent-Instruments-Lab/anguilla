@@ -32,61 +32,58 @@ def main(
 
     OSC Methods:
 
-        /anguilla/config "embed_input" "Identity"
+        /anguilla/instance/config "embed_input" "Identity"
             set input embedding to Identity (the default)
-        /anguilla/config "embed_input" "ProjectAndSort"
+        /anguilla/instance/config "embed_input" "ProjectAndSort"
             set input embedding to ProjectAndSort
 
-        /anguilla/config "interpolate" "Smooth"
+        /anguilla/instance/config "interpolate" "Smooth"
             set interpolator to Smooth (the default)
-        /anguilla/config "interpolate" "Softmax"
+        /anguilla/instance/config "interpolate" "Softmax"
             set interpolator to Softmax
-        /anguilla/config "interpolate" "Ripple"
+        /anguilla/instance/config "interpolate" "Ripple"
             set interpolator to Ripple
 
-        /anguilla/add "input" ... "output"... 
+        /anguilla/instance/add "input" ... "output"... 
             add a point to the mapping
 
-        /anguilla/add_batch "input" <json> "output" <json> 
+        /anguilla/instance/add_batch "input" <json> "output" <json> 
             add a batch of points to the mapping
             each <json> is a JSON string: { "shape": [B, D], "data": [...] }
             where B is the batch size and D is the input dimension,
             and data is a list of numbers of length B*D.
 
-        /anguilla/remove id 
+        /anguilla/instance/remove id 
             remove a point from the mapping by ID
 
-        /anguilla/remove_near "input" ... ["k" k]
+        /anguilla/instance/remove_near "input" ... ["k" k]
             remove k points from the mapping by proximity
             here you would replace '...' with a series of numbers
             '[]' denotes optional parts of the message (not OSC lists)
 
-        /anguilla/map "input" ... ["k" k] ["ripple" r] ["temp" t]
+        /anguilla/instance/map "input" ... ["k" k] ["ripple" r] ["temp" t]
             map an input to an output using k neighbors
             "temp" 1 > t > 0 when using Softmax interpolator
             "ripple" r > 0 when using Ripple interpolator
             
-        /anguilla/map_batch "input" <json> ["k" k] ["ripple" r] ["temp" t] 
+        /anguilla/instance/map_batch "input" <json> ["k" k] ["ripple" r] ["temp" t] 
             add a batch of points to the mapping
             <json> is a JSON string: { "shape": [B, D], "data": [...] }
             where B is the batch size and D is the input dimension,
             and data is a list of numbers of length B*D.
             the output is returned as JSON in the same format. 
 
-        /anguilla/reset
+        /anguilla/instance/reset
             remove all points
-        /anguilla/reset "keep_near" ... ["k" k]
+        /anguilla/instance/reset "keep_near" ... ["k" k]
             remove all points except the k neighbors of "keep_near"
 
-        /anguilla/load path
+        /anguilla/instance/load path
             load IML from file at `path`
-        /anguilla/save path
+        /anguilla/instance/save path
             save IML to file at `path`
 
-        all of the above methods accept and additional `instance <name>`
-        pair of arguments, where `<name>` refers to an `IML` instance.
-        if not provided, the value of `<name>` is the string "default"
-
+        replace 'instance' with any string to address a unique IML instance.
     """
     osc = OSC(osc_host, osc_port, verbose=verbose)
 
