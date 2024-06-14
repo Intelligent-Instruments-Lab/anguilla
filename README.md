@@ -22,6 +22,10 @@ For examples and tutorials of how to use `anguilla`, see our [examples repo](htt
 pip install anguilla-iml
 ```
 
+### with pytorch
+
+If you encounter an incompatibility between the PyPI versions of pytorch and faiss-cpu, try installing them both from conda (`conda install -c pytorch pytorch faiss-cpu`) before `pip install anguilla-iml`.
+
 ## Develop
 
 See the [iil-dev](https://github.com/Intelligent-Instruments-Lab/iil-dev) repo for a recommended dev environment. 

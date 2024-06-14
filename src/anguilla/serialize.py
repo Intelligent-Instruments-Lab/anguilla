@@ -1,4 +1,6 @@
 from .types import *
+from .__version__ import __version__
+from packaging.version import Version
 
 import json
 import io
@@ -8,10 +10,6 @@ from copy import deepcopy
 from datetime import datetime
 
 import numpy as np
-
-from packaging.version import Version
-import importlib.metadata
-version = importlib.metadata.version('anguilla')
 
 class JSONSerializable:
     """JSON serialization for Python classes.
@@ -154,10 +152,10 @@ def load(path):
         # do stuff with metadata
         meta = obj['__meta__']
         obj = obj['__body__']
-        if Version(version) < Version(meta['__version__']):
+        if Version(__version__) < Version(meta['__version__']):
             print('WARNING: loading saved file from a previous anguilla version')
             # backard compat logic goes here
-        elif Version(version) > Version(meta['__version__']):
+        elif Version(__version__) > Version(meta['__version__']):
             print('WARNING: loading saved file from a future anguilla version')
     
     return obj
@@ -165,7 +163,7 @@ def load(path):
 def save(path, obj):
     obj = {
         '__meta__': {
-            '__version__': version,
+            '__version__': __version__,
             '__date__': str(datetime.now())
         },
         '__body__': obj

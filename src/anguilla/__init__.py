@@ -3,6 +3,7 @@ import itertools as it
 from scipy.interpolate import CubicSpline
 
 from .types import *
+from .__version__ import __version__
 
 from . import nnsearch as _nnsearch
 from . import embed as _embed
@@ -11,9 +12,6 @@ from . import serialize
 from .nnsearch import Index, IndexFast
 from .embed import Embedding, Identity
 from .interpolate import Interpolate, Smooth
-
-import importlib.metadata
-__version__ = importlib.metadata.version('anguilla-iml')
 
 # # # TODO: serialize defaults where possible
 
