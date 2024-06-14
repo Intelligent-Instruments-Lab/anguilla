@@ -13,7 +13,7 @@ from .embed import Embedding, Identity
 from .interpolate import Interpolate, Smooth
 
 import importlib.metadata
-__version__ = importlib.metadata.version('anguilla')
+__version__ = importlib.metadata.version('anguilla-iml')
 
 # # # TODO: serialize defaults where possible
 
