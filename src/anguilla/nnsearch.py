@@ -97,7 +97,7 @@ class IndexBrute(Index):
     Optimized for simplicity and flexibility,
     may not scale to large datasets.
     """
-    def __init__(self, d:Tuple[int, int]=None, metric:Callable=None):
+    def __init__(self, d:Tuple[int, int]=None, metric:Callable=None, **kw):
         """
         Args:
             d: optional, dimension of (input, output) features
@@ -106,7 +106,7 @@ class IndexBrute(Index):
         if metric is None:
             metric = sqL2()
         
-        super().__init__(d=d, metric=metric)
+        super().__init__(d=d, metric=metric, **kw)
         self.d = d
         self.metric = metric
 
@@ -346,6 +346,9 @@ try:
             if z.ndim!=2: raise ValueError
             # print(f'{batch=}', z.ndim)
             z = z.astype(np.float32) 
+
+            assert isinstance(z, np.ndarray)
+            assert z.dtype == np.float32
 
             # nearest neighbor search
             scores, idxs = self.z_index.search(z, k)

@@ -1,3 +1,5 @@
+from .types import *
+
 import json
 import io
 import base64
@@ -48,12 +50,8 @@ def torch_serializable(o):
         return True
     
     # this should catch specializations of torch tensor outside the torch module
-    try:
-        import torch
-        if isinstance(o, torch.Tensor):
-            return True
-    except ImportError:
-        pass
+    if torch_present and isinstance(o, torch.Tensor):
+        return True
 
     return False
 
@@ -81,13 +79,12 @@ class JSONEncoder(json.JSONEncoder):
             except TypeError:
                 # try torch or numpy binary serialization + base85
                 buf = io.BytesIO()
-                if torch_serializable(o):
-                    import torch
-                    torch.save(buf, o)
+                if torch_present and torch_serializable(o):
+                    torch.save(o, buf)
                     return {'__pt__':base64.b85encode(buf.getvalue())}
                 # elif np_serializable(o):
                 np.save(buf, o)
-                return {'__npy__':base64.b85encode(buf.getvalue())}
+                return {'__npy__':base64.b85encode(buf.getvalue()).decode('utf8')}
                 # else:
                     # raise
         
@@ -107,11 +104,10 @@ class JSONDecoder(json.JSONDecoder):
             cls = get_cls(d['__type__'])
             return cls
         elif '__pt__' in d:
-            import torch
-            buf = io.BytesIO(base64.base85decode(d['__pt__']))
+            buf = io.BytesIO(base64.b85decode(d['__pt__']))
             return torch.load(buf)
         elif '__npy__' in d:
-            buf = io.BytesIO(base64.base85decode(d['__npy__']))
+            buf = io.BytesIO(base64.b85decode(d['__npy__']))
             return np.load(buf)
 
         return d
@@ -170,7 +166,7 @@ def save(path, obj):
     obj = {
         '__meta__': {
             '__version__': version,
-            '__date__': datetime.now()
+            '__date__': str(datetime.now())
         },
         '__body__': obj
     }

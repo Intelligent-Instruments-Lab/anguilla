@@ -13,7 +13,6 @@ from .interpolate import Interpolate, Smooth
 import importlib.metadata
 __version__ = importlib.metadata.version('anguilla')
 
-# # # TODO: state serialization
 # # # TODO: serialize defaults where possible
 
 def issubtype(t1, t2):
