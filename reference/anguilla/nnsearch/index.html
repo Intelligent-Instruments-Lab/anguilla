@@ -441,6 +441,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../__version__/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+      version  
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../embed/" class="md-nav__link">
         
   
@@ -794,10 +815,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1_8" >
         
           
-          <label class="md-nav__link" for="__nav_2_1_7" id="__nav_2_1_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_1_8" id="__nav_2_1_8_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -808,8 +829,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_7">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_8">
             <span class="md-nav__icon md-icon"></span>
             App
           </label>
@@ -1162,7 +1183,7 @@ currently no function besides typing, warning of unimplemented features.</p>
 cababilities and performance tradeoffs.</p>
 
             <details class="quote">
-              <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-25">25</a></span>
 <span class="normal"><a href="#__codelineno-0-26">26</a></span>
 <span class="normal"><a href="#__codelineno-0-27">27</a></span>
@@ -1329,7 +1350,7 @@ cababilities and performance tradeoffs.</p>
       <p>iterate over IDs in the index</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-58">58</a></span>
 <span class="normal"><a href="#__codelineno-0-59">59</a></span>
 <span class="normal"><a href="#__codelineno-0-60">60</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1357,7 +1378,7 @@ cababilities and performance tradeoffs.</p>
       <p>compute distance between two features</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span>
 <span class="normal"><a href="#__codelineno-0-71">71</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span><span class="n">Feature</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span><span class="n">Feature</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -1385,7 +1406,7 @@ cababilities and performance tradeoffs.</p>
       <p>not batched (mainly for testing purposes)</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-44">44</a></span>
 <span class="normal"><a href="#__codelineno-0-45">45</a></span>
 <span class="normal"><a href="#__codelineno-0-46">46</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span><span class="n">PairID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IOPair</span><span class="p">:</span>
@@ -1413,7 +1434,7 @@ cababilities and performance tradeoffs.</p>
       <p>iterate over (ID, (Input, Output))</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-62">62</a></span>
 <span class="normal"><a href="#__codelineno-0-63">63</a></span>
 <span class="normal"><a href="#__codelineno-0-64">64</a></span>
@@ -1493,7 +1514,7 @@ Use k=1 to remove a single point.</p>
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-73">73</a></span>
 <span class="normal"><a href="#__codelineno-0-74">74</a></span>
 <span class="normal"><a href="#__codelineno-0-75">75</a></span>
@@ -1568,7 +1589,7 @@ Use k=1 to remove a single point.</p>
 may not scale to large datasets.</p>
 
             <details class="quote">
-              <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
 <span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
 <span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
@@ -1848,7 +1869,7 @@ may not scale to large datasets.</p>
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-100">100</a></span>
 <span class="normal"><a href="#__codelineno-0-101">101</a></span>
 <span class="normal"><a href="#__codelineno-0-102">102</a></span>
@@ -1903,7 +1924,7 @@ Args:
         supply an existing id to replace.</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-115">115</a></span>
 <span class="normal"><a href="#__codelineno-0-116">116</a></span>
 <span class="normal"><a href="#__codelineno-0-117">117</a></span>
@@ -1969,7 +1990,7 @@ Args:
       <p>get a pair by ID</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-150">150</a></span>
 <span class="normal"><a href="#__codelineno-0-151">151</a></span>
 <span class="normal"><a href="#__codelineno-0-152">152</a></span>
@@ -2003,7 +2024,7 @@ Args:
       <p>remove points by ID</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span>
@@ -2047,7 +2068,7 @@ Args:
       <p>get feature(s) and IDs by proximity</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-157">157</a></span>
 <span class="normal"><a href="#__codelineno-0-158">158</a></span>
 <span class="normal"><a href="#__codelineno-0-159">159</a></span>
@@ -2151,7 +2172,7 @@ Only L2 distance supported.
 In the future could support dot product and/or approximate search indices.</p>
 
             <details class="quote">
-              <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-202">202</a></span>
 <span class="normal"><a href="#__codelineno-0-203">203</a></span>
 <span class="normal"><a href="#__codelineno-0-204">204</a></span>
@@ -2617,7 +2638,7 @@ In the future could support dot product and/or approximate search indices.</p>
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-211">211</a></span>
 <span class="normal"><a href="#__codelineno-0-212">212</a></span>
 <span class="normal"><a href="#__codelineno-0-213">213</a></span>
@@ -2687,7 +2708,7 @@ Args:
         already existing ids will be replaced.</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-249">249</a></span>
 <span class="normal"><a href="#__codelineno-0-250">250</a></span>
 <span class="normal"><a href="#__codelineno-0-251">251</a></span>
@@ -2791,7 +2812,7 @@ Args:
       <p>get a feature pair by ID</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-312">312</a></span>
 <span class="normal"><a href="#__codelineno-0-313">313</a></span>
 <span class="normal"><a href="#__codelineno-0-314">314</a></span>
@@ -2833,7 +2854,7 @@ Args:
       <p>remove points by ID</p>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-291">291</a></span>
 <span class="normal"><a href="#__codelineno-0-292">292</a></span>
 <span class="normal"><a href="#__codelineno-0-293">293</a></span>
@@ -2949,7 +2970,7 @@ Args:
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+            <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-323">323</a></span>
 <span class="normal"><a href="#__codelineno-0-324">324</a></span>
 <span class="normal"><a href="#__codelineno-0-325">325</a></span>
@@ -3111,7 +3132,7 @@ Relative distances will be used to find nearest neighbors,
 and the distances to neighbors will be passed to <code>Interpolate</code>.</p>
 
             <details class="quote">
-              <summary>Source code in <code>anguilla/nnsearch.py</code></summary>
+              <summary>Source code in <code>src/anguilla/nnsearch.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-12">12</a></span>
 <span class="normal"><a href="#__codelineno-0-13">13</a></span>
 <span class="normal"><a href="#__codelineno-0-14">14</a></span>
