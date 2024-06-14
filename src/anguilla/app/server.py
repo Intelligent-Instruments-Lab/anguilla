@@ -12,18 +12,11 @@ from collections import defaultdict
 from typing import Optional
 
 def get_handle(address):
-    # return ''.join(address.split('/')[3:]).strip('/')
     s = address.split('/')
     # print(s)
     assert s[0]==''
     assert s[1]=='anguilla'
     return s[2]
-    # if len(s)==4: 
-    #     return s[-2]
-    # elif len(s)==3:
-    #     return 'default'
-    # else:
-    #     raise ValueError(address, s)
 
 def main(
     osc_port:int=8732,
@@ -129,54 +122,6 @@ def main(
 
         '/return'+address, str(configs[key])
 
-    ##### prototype
-    @osc.handle('/anguilla/*/seq_input', return_port=osc_return_port)
-    def _(address, input:Splat[None]):
-        iml = get_instance(address)
-
-        if not hasattr(iml, 'in_buffer'):
-            iml.in_buffer = []
-
-        iml.in_buffer.append(input)
-
-    @osc.handle('/anguilla/*/seq_output', return_port=osc_return_port)
-    def _(address, output:Splat[None]):
-        iml = get_instance(address)
-        
-        if not hasattr(iml, 'out_buffer'):
-            iml.out_buffer = []
-
-        iml.out_buffer.append(output)
-
-    @osc.handle('/anguilla/*/seq_end', return_port=osc_return_port)
-    def _(address, n=100):
-        iml = get_instance(address)
-        
-        from  scipy.interpolate import CubicSpline
-
-        coords = np.linspace(0,1,n)
-
-        print(f"{len(iml.in_buffer)=} {len(iml.out_buffer)=}")
-
-        inputs = CubicSpline(
-            np.linspace(0,1,len(iml.in_buffer)), 
-            np.array(iml.in_buffer)
-            )(coords)
-        
-        outputs = CubicSpline(
-            np.linspace(0,1,len(iml.out_buffer)), 
-            np.array(iml.out_buffer)
-            )(coords)
-        
-        print(f'{inputs.shape=} {outputs.shape=}')
-        
-        ids = iml.add_batch(inputs, outputs)
-
-        iml.in_buffer = []
-        iml.out_buffer = []
-
-        return '/return'+address, ids
-
     @osc.handle('/anguilla/*/add', return_port=osc_return_port)
     def _(address, input:Splat[None], output:Splat[None], id:int=None):
         iml = get_instance(address)
@@ -230,13 +175,6 @@ def main(
         assert path.endswith('.json'), \
             f"ERROR: anguilla {address}: path should end with .json"
         
-        # if key is None:
-        #     print(f'loading all IML objects from {path}')
-        #     d = anguilla.serialize.load(path)
-        #     assert isinstance(d, dict)
-        #     print(f'found IML instances: {list(d.keys())}')
-        #     instances.update(d)
-        # else:
         print(f'load IML object at "{key}" from {path}')
         instances[key] = IML.load(path)
 
@@ -247,15 +185,31 @@ def main(
         assert path.endswith('.json'), \
             f"ERROR: anguilla {address}: path should end with .json"
         
-        # if key is None:
-            # print(f'saving all IML objects to {path}')
-            # anguilla.serialize.save(path, instances)
-        # else:
         if iml is not None:
             print(f'saving IML object at "{get_handle(address)}" to {path}')
             iml.save(path)
 
     ## TODO: add load_all, save_all?
+
+    @osc.handle('/anguilla/*/seq_input', return_port=osc_return_port)
+    def _(address, input:Splat[None]):
+        iml = get_instance(address)
+        iml.seq_input(input)
+
+    @osc.handle('/anguilla/*/seq_output', return_port=osc_return_port)
+    def _(address, output:Splat[None]):
+        iml = get_instance(address)
+        iml.seq_output(output)
+
+    @osc.handle('/anguilla/*/seq_end', return_port=osc_return_port)
+    def _(address, n=100):
+        iml = get_instance(address)
+        return '/return'+address, iml.seq_end(n)
+    
+    @osc.handle('/anguilla/*/seq_reset', return_port=osc_return_port)
+    def _(address):
+        iml = get_instance(address)
+        return '/return'+address, iml.seq_reset()
 
 if __name__=='__main__':
     run(main)

@@ -1,5 +1,7 @@
 import itertools as it
 
+from scipy.interpolate import CubicSpline
+
 from .types import *
 
 from . import nnsearch as _nnsearch
@@ -63,6 +65,7 @@ class IML(serialize.JSONSerializable):
             embed_input=self.embed_input, embed_output=self.embed_output, 
             interpolate=self.interpolate, index=self.index)
 
+        self.seq_reset()
         self.reset()
 
     def reset(self, keep_near:Input=None, k:int=None):
@@ -168,7 +171,7 @@ class IML(serialize.JSONSerializable):
         try:
             return self.pairs[id]
         except Exception:
-            print("NNSearch: WARNING: can't `get` ID which doesn't exist or has been removed")
+            print("IML: WARNING: can't `get` ID which doesn't exist or has been removed")
 
     def remove_batch(self, ids:PairIDs):
         self.remove(ids, batch=True)
@@ -237,6 +240,58 @@ class IML(serialize.JSONSerializable):
             output
         """
         return self.map_batch((input,), k, **kw)[0]
+
+    ### prototype feature
+    def seq_reset(self):
+        """clear buffered input/output sequences"""
+        self.seq_in_buffer = []
+        self.seq_out_buffer = []
+
+    def seq_input(self, input:Input):
+        """add to the buffered input sequence"""
+        self.seq_in_buffer.append(input)
+
+    def seq_output(self, output:Output):
+        """add to the buffered output sequence"""
+        self.seq_out_buffer.append(output)
+
+    def seq_end(self, n=100):
+        """interpolate the buffered input and output sequences to length n,
+        then add n pairs to the mapping and clear the buffered sequences.
+
+        Does nothing if either buffered sequence is empty.
+
+        Args:
+            n: the number of points to add
+
+        Returns:
+            same as add_batch
+        """
+        if self.verbose > 1:
+            print(f"{len(self.seq_in_buffer)=} {len(self.seq_out_buffer)=}")
+
+        if not len(self.seq_in_buffer):
+            print(f"IML: WARNING: calling seq_end with no buffered inputs")
+            return []
+        if not len(self.seq_out_buffer):
+            print(f"IML: WARNING: calling seq_end with no buffered outputs")
+            return []
+
+        coords = np.linspace(0,1,n)
+
+        inputs = CubicSpline(
+            np.linspace(0,1,len(self.seq_in_buffer)), 
+            np.array(self.seq_in_buffer)
+            )(coords)
+        
+        outputs = CubicSpline(
+            np.linspace(0,1,len(self.seq_out_buffer)), 
+            np.array(self.seq_out_buffer)
+            )(coords)
+                
+        self.seq_reset()
+
+        return self.add_batch(inputs, outputs)
 
     def save_state(self):
         """
