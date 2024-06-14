@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "anguilla-iml"
 packages = [{ include = "anguilla", from = "src"}]
-version = "0.2.1b0"
+version = "0.2.1"
 description = "a package for interactive machine learning"
 authors = ["Victor Shepardson <victor.shepardson@gmail.com>"]
 license = "MIT"
@@ -12,7 +12,7 @@ python = ">=3.10,<3.13"
 numpy = "^1.23"
 scipy = "^1.13.1"
 faiss-cpu = "^1.7"
-iipyper = {path = "../iipyper", develop = true}
+iipyper = "~0.1.6"
 torch = {version = "^2.2.0", optional = true}
 
 [tool.poetry.extras]
