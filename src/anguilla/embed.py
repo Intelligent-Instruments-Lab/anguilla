@@ -9,6 +9,7 @@ class Embedding(JSONSerializable):
         # set to True if ArrayLike inputs with
         # leading batch dimensions are supported
         self.is_batched = False
+        self.has_inv = False
 
     def __call__(self, source: Input) -> Feature:
         raise NotImplementedError
@@ -33,6 +34,7 @@ class Identity(Embedding):
         super().__init__(size=size)
         self.size = self.input_size = size
         self.is_batched = True
+        self.has_inv = True
         # self.in_type = lambda x:x
 
     def __call__(self, source) -> ArrayLike:

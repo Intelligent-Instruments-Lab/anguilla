@@ -326,12 +326,18 @@ try:
                 return_outputs=True, 
                 return_ids=True
                 ) -> SearchResult:
-            """get outputs(s), distances, and IDs by proximity
+            """get neighbors, outputs, IDs and distances by proximity
+
+            Args:
+                z: [batch, input feature] inputs to find neighbors of
+                return_inputs: if True, return the neighbor embeddings
+                return_outputs: if True, return the neighbors' output embeddings
+                return_ids: if True, return the ids of neighbors
             
             Returns:
-                zs: [batch, k, input feature]
-                ws: [batch, k, output feature]
-                ids: [batch, k]
+                zs: [batch, k, input feature] if return_inputs, else None
+                ws: [batch, k, output feature] if return_outputs, else None
+                ids: [batch, k] if return_ids, else None
                 scores: [batch, k]
             """
             k = k or self.default_k
