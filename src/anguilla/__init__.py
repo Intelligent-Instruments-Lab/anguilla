@@ -74,7 +74,6 @@ class IML(serialize.JSONSerializable):
             keep_near: don't remove the neighbors of this input
             k: number of neighbors for above
         """
-        print('reset')
         res = None
         if keep_near is not None and len(self.pairs)>0:
             if len(keep_near)!=len(self.pairs[0][0]):
@@ -238,6 +237,61 @@ class IML(serialize.JSONSerializable):
             output
         """
         return self.map_batch((input,), k, **kw)[0]
+    
+    def search(self, input:Input, k:int=None, 
+            return_inputs=True,
+            return_outputs=True, 
+            return_ids=True,
+            batch=False) -> PairIDs:
+        """
+        find neighbors of the given input.
+        """
+        if not batch:
+            input = (input,)
+        zs = self.embed_batch(self.embed_input, input)
+        k_zs, k_ws, k_ids, k_scores = self.index.search(
+            zs, 
+            return_inputs=return_inputs, 
+            return_outputs=return_outputs, 
+            return_ids=return_ids, 
+            k=k)
+        if return_inputs and self.embed_input.has_inv:
+            k_inputs = self.embed_batch(self.embed_input, k_zs, inv=True)
+            if not batch:
+                k_inputs = k_inputs[0]
+        else:
+            k_inputs = None
+        if return_outputs:
+            k_outputs = self.embed_batch(self.embed_output, k_ws, inv=True)
+            if not batch:
+                k_outputs = k_outputs[0]
+        else:
+            k_outputs = None
+        if not batch:
+            if return_ids:
+                k_ids = k_ids[0]
+            k_scores = k_scores[0]
+        
+        return k_inputs, k_outputs, k_ids, k_scores
+
+    def search_batch(self, *a, **kw):
+        return self.search(*a, **kw, batch=True)
+
+    def distance(self, a:Input, b:Input, batch=False):
+        if not batch:
+            a = (a,)
+            b = (b,)
+        d = self.index.distance(
+            self.embed_batch(self.embed_input, a),
+            self.embed_batch(self.embed_input, b),
+            )
+        if not batch:
+            d = d.item()
+        return d
+    
+    def distance_batch(self, *a, **kw):
+        return self.distance(*a, **kw, batch=True)
+
 
     ### prototype feature
     def seq_reset(self):
