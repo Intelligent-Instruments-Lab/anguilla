@@ -13,7 +13,7 @@ numpy = "^1.23"
 scipy = "^1.13.1"
 faiss-cpu = "^1.7"
 iipyper = {path = "../iipyper", develop = true}
-torch = {version = "^2.2.0", optional = true}
+torch = {version = "~2.1.0", optional = true}
 
 [tool.poetry.extras]
 torch = ["torch"]
