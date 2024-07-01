@@ -47,7 +47,7 @@ def main(
         /anguilla/instance/add "input" ... "output"... 
             add a point to the mapping
 
-        /anguilla/instance/add_batch "input" <json> "output" <json> 
+        /anguilla/instance/add_batch "inputs" <json> "outputs" <json> 
             add a batch of points to the mapping
             each <json> is a JSON string: { "shape": [B, D], "data": [...] }
             where B is the batch size and D is the input dimension,
@@ -66,7 +66,7 @@ def main(
             "temp" 1 > t > 0 when using Softmax interpolator
             "ripple" r > 0 when using Ripple interpolator
             
-        /anguilla/instance/map_batch "input" <json> ["k" k] ["ripple" r] ["temp" t] 
+        /anguilla/instance/map_batch "inputs" <json> ["k" k] ["ripple" r] ["temp" t] 
             add a batch of points to the mapping
             <json> is a JSON string: { "shape": [B, D], "data": [...] }
             where B is the batch size and D is the input dimension,
