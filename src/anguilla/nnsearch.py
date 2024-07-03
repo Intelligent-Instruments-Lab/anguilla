@@ -13,7 +13,7 @@ class Metric(JSONSerializable):
     """
     define a distance between two points. 
     Relative distances will be used to find nearest neighbors,
-    and the distances to neighbors will be passed to `Interpolate`.
+    and the distances to neighbors ("scores") will be passed to `Interpolate`.
     """
     def __call__(self, a, b):
         raise NotImplementedError
@@ -66,8 +66,8 @@ class Index(JSONSerializable):
                 yield i, self.get(i)
         return iterator()
     
-    def distance(self, a:Feature, b:Feature) -> float:
-        """compute distance between two features"""
+    def score(self, a:Feature, b:Feature) -> float:
+        """compute metric distance between two features"""
         return self.metric(a, b)
     
     def remove_near(self, zs:List[Feature], k:int=None) -> PairIDs:
@@ -406,94 +406,4 @@ except ImportError:
     class IndexFastL2(Index):
         def __init__(self, *a, **kw):
             raise NotImplementedError("""install faiss for IndexFastL2""")
-
-# class NNSearch(JSONSerializable):
-#     """
-#     This class is the mid-level interface for neighbor search,
-#     providing some common utilities over the Index subclasses.
-#     Users will generally use `IML.search` instead of calling `NNSearch` directly.
-#     """
-#     # TODO: possibly get rid of this class and fold it into IML?
-#     #     * currently adds only complexity to the IML implementation
-#     #     * but could be useful if needing NNSearch without Embed/Interpolate?
-#     def __init__(self, index:Index, k=10):
-#         """
-#         Args:
-#             index: instance of `Index`
-#             k: default k-nearest neighbors (but can be overridden later)
-#         """
-#         super().__init__(index=index, k=k)
-#         self.index = index
-#         self.default_k = k
-
-#     def __call__(self, feature:Feature, k:int=None) -> Tuple[PairIDs, Scores]:
-#         """
-#         find the k-nearest neighbors of `feature`
-#         Args:
-#             feature: query feature vector
-#             k: maximum number of neighbors to return
-#         Returns:
-#             ids: ids of neighbors
-#             scores: similarity scores of neighbors (higher is more similar)
-#         """
-#         k = k or self.default_k
-#         return self.index.search(feature, k)
-    
-#     def distance(self, a:Feature, b:Feature) -> float:
-#         """compute distance between two features"""
-#         return self.index.metric(a, b)
-
-#     def add(self, feature: Feature, id:Optional[PairID]=None) -> PairID:
-#         """add a feature vector to the index and return its ID"""
-#         return self.index.add(feature, id)
-    
-#     def get(self, id:PairID) -> Feature:
-#         """look up a feature by ID"""
-#         try:
-#             return self.index.get(id)
-#         except Exception:
-#             print(f"NNSearch: WARNING: can't `get` ID {id} which doesn't exist or has been removed")
-
-    
-#     def remove(self, id: Union[PairID, PairIDs], batch:bool=False):
-#         """
-#         Remove point(s) from the index by ID
-
-#         Args:
-#             id: id or sequence of ids
-#             batch: True if removing a batch of ids, False if a single id.
-#         """        
-#         if batch:
-#             return [self.remove(i) for i in id]
-#         else:
-#             try:
-#                 return self.index.remove(id)
-#             except Exception:
-#                 print(f"NNSearch: WARNING: can't `remove` ID {id} which doesn't exist or has already been removed")
-
-#     def remove_near(self, feature:Feature, k:int=None) -> PairIDs:
-#         """
-#         Remove point(s) from the index by proximity.
-#         Use k=1 to remove a single point.
-#         """
-#         # TODO: batching support?
-#         k = k or self.default_k
-#         ids, _ = self(feature, k=k)
-#         self.remove(ids, batch=True)
-#         return ids
-    
-#     def reset(self):
-#         """clear all data from the index"""
-#         self.index.reset()
-
-#     def __iter__(self):
-#         """iterate over IDs in the index"""
-#         return iter(self.index.ids)
-    
-#     def items(self) -> Generator[IDFeaturePair, None, None]:
-#         """iterate over ID, Feature pairs"""
-#         def iterator():
-#             for id in self.index.ids:
-#                 yield IDFeaturePair(id, self.index.get(id))
-#         return iterator()
 
