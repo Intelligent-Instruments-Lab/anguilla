@@ -277,20 +277,20 @@ class IML(serialize.JSONSerializable):
     def search_batch(self, *a, **kw):
         return self.search(*a, **kw, batch=True)
 
-    def distance(self, a:Input, b:Input, batch=False):
+    def score(self, a:Input, b:Input, batch=False):
         if not batch:
             a = (a,)
             b = (b,)
-        d = self.index.distance(
+        s = self.index.score(
             self.embed_batch(self.embed_input, a),
             self.embed_batch(self.embed_input, b),
             )
         if not batch:
-            d = d.item()
-        return d
+            s = s.item()
+        return s
     
-    def distance_batch(self, *a, **kw):
-        return self.distance(*a, **kw, batch=True)
+    def score_batch(self, *a, **kw):
+        return self.score(*a, **kw, batch=True)
 
 
     ### prototype feature
