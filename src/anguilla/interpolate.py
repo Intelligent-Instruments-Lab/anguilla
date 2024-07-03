@@ -122,7 +122,7 @@ class Smooth(Interpolate):
             return Nearest()(targets, scores)
         
         targets, scores = np_coerce(targets, scores)
-
+        
         scores = scores**0.5
 
         scores = scores + eps

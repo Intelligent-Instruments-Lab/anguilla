@@ -28,8 +28,9 @@ class SearchResult(NamedTuple):
     scores:Scores
 
 def _np_coerce(x):
-    if x is None:
-        return None
+    if x is None or isinstance(x, np.ndarray):
+        # no conversion
+        return x
     if hasattr(x, 'numpy'):
         # torch tensor, etc
         return x.numpy()
